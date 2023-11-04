@@ -16,13 +16,9 @@ using mint = atcoder::modint998244353;
 /* 省略 */
 #define pb push_back
 #define eb emplace_back
-// #define mp make_pair
-// #define mt make_tuple
 #define fi first
 #define se second
 #define elif else if
-#define add insert
-#define del erase
 
 /* 関数 */
 #define ctoll(x) static_cast<long long>(x - '0')
@@ -96,9 +92,9 @@ using mmap = multimap<T, U>;
 template <typename T, typename U>
 using umap = unordered_map<T, U>;
 template <class T>
-using pq = priority_queue<T>;
+using pq = priority_queue<T>;  // 大きい順に取り出す
 template <class T>
-using pqg = priority_queue<T, vector<T>, greater<T>>;  // 昇順
+using pqg = priority_queue<T, vector<T>, greater<T>>;  // 小さい順に取り出す
 // unordered_set, unordered_multiset, unordered_map, unordered_multimap で pair, vector, tuple を key に設定させる
 template<class T> size_t HashCombine(const size_t seed,const T &v){
     return seed^(std::hash<T>()(v)+0x9e3779b9+(seed<<6)+(seed>>2));
@@ -214,6 +210,46 @@ lambda(G&&) -> lambda<std::decay_t<G>>;
 
 
 int main(){
-  STR(S, T);
-  print(S, "san");
+  LL(N, M);
+  VEC(ll, H, N);
+  vvvl G(N);
+  rep(i, M){
+    LL(u, v);
+    u--;
+    v--;
+    if(H[u] <= H[v]){
+      G[u].push_back({v, -2 * (H[v] - H[u])});
+      G[v].push_back({u, H[v] - H[u]});
+    }else{
+      G[v].push_back({u, -2 * (H[u] - H[v])});
+      G[u].push_back({v, H[u] - H[v]});
+    }
+  }
+
+  // 行き先, コスト
+  debug(G)
+
+  vl dist(N, -1);
+  queue<vl> q;
+  dist[0] = 0;
+  rep(i, len(G[0])){
+    q.push(G[0][i]);
+  }
+  while (len(q)){
+    ll v = q.front()[0];
+    ll cost = q.front()[1];
+    q.pop();
+
+    fore(i, G[v]){
+      ll nv = i[0];
+      ll ncost = i[1];
+      if (dist[nv] != -1){
+        continue;
+      }
+      dist[nv] = dist[v] + ncost;
+      q.push(nv);
+    }
+  }
+
+  fore(v, dist) print(v);
 }

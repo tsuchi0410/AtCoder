@@ -1,0 +1,1 @@
+string ans = regex_replace(S, regex("na"), "nya");

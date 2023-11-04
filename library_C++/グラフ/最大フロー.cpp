@@ -25,23 +25,23 @@ ll res = G.flow(s, t);
 */
 
 int main(){
-    LL(N, M);
-    mf_graph<ll> G(N);
-    rep(i, M){
-        LL(u, v, w);
-        u--;
-        v--;
-        G.add_edge(u, v, w);
-    }
+  LL(N, M);
+  mf_graph<ll> G(N);
+  rep(i, M){
+    LL(u, v, w);
+    u--;
+    v--;
+    G.add_edge(u, v, w);
+  }
 
-    ll flow = G.flow(0, N - 1);
-    debug(flow)
+  ll flow = G.flow(0, N - 1);
+  debug(flow)
 
-    mf_graph<ll>::edge i = G.get_edge(0);
+  mf_graph<ll>::edge i = G.get_edge(0);
+  debug(i.from, i.to, i.flow);
+
+  vector<mf_graph<ll>::edge> v = G.edges();
+  fore(i, v){
     debug(i.from, i.to, i.flow);
-
-    vector<mf_graph<ll>::edge> v = G.edges();
-    fore(i, v){
-        debug(i.from, i.to, i.flow);
-    }
+  }
 }

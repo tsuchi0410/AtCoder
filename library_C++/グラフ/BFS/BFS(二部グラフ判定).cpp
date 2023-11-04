@@ -10,43 +10,43 @@ vl color を追加する（白 = 0, 黒 = 1, 未探索 = -1）
 */
 
 int main(){
-    LL(N, M);
-    vvl G(N);
-    rep(i, M){
-        LL(u, v);
-        G[u].pb(v);
-        G[v].pb(u);
-    }
+  LL(N, M);
+  vvl G(N);
+  rep(i, M){
+    LL(u, v);
+    G[u].push_back(v);
+    G[v].push_back(u);
+  }
     
-    bool isnibu = true;
-    vl color(N, -1);  // color 0, 1, -1
-    rep(v, N){
-        // 訪問済みであればスキップ
-        if(color[v] != -1){
-            continue;
-        }
-        queue<ll> q;
-        color[v] = 0;
-        q.push(v);
-        while(len(q)){
-            ll u = q.front();
-            q.pop();
-            fore(nu, G[u]){
-                if(color[nu] != -1){
-                    if(color[nu] == color[u]){
-                        isnibu = false;
-                    }
-                    continue;
-                }
-                color[nu] = 1 ^ color[u];
-                q.push(nu);
-            }
-        }
+  bool isnibu = true;
+  vl color(N, -1);  // color 0, 1, -1
+  rep(v, N){
+    // 訪問済みであればスキップ
+    if(color[v] != -1){
+      continue;
     }
+    queue<ll> q;
+    color[v] = 0;
+    q.push(v);
+    while(len(q)){
+      ll u = q.front();
+      q.pop();
+      fore(nu, G[u]){
+        if(color[nu] != -1){
+          if(color[nu] == color[u]){
+            isnibu = false;
+          }
+          continue;
+        }
+        color[nu] = 1 ^ color[u];
+        q.push(nu);
+      }
+    }
+  }
 
-    if(isnibu == true){
-        print("Yes");
-    }else{
-        print("No");
-    }
+  if(isnibu == true){
+    print("Yes");
+  }else{
+    print("No");
+  }
 }

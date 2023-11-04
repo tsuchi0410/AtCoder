@@ -13,8 +13,8 @@ int main(){
     LL(u, v);
     u--;
     v--;
-    G[u].pb(v);
-    G[v].pb(u);
+    G[u].push_back(v);
+    G[v].push_back(u);
   }
 
   vl dist(N, -1);
