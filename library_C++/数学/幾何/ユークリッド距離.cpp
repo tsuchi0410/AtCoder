@@ -1,0 +1,1 @@
+long double ed(long long x1, long long y1, long long x2, long long y2) {return sqrt(pow(x2 - x1, 2) + pow(y2 - y1, 2));}

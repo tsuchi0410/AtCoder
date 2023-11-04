@@ -1,0 +1,9 @@
+
+seg = LazySegTree_RAQ(A, segfunc, ide_ele)
+
+◎操作
+1. ある1つの要素の更新
+add(l, r, x) : [l, r]の要素に x を加算
+
+2. ある区間の操作の結果を取得
+query(l, r) : [l, r)(l以上r未満の区間)から値を取得

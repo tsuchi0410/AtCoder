@@ -1,0 +1,13 @@
+◯BITの概要
+区間の和に対するクエリ(RSQ)を効率的に処理するデータ構造
+
+◯使い方
+# 使用例
+bit = Bit(10)     # 要素数を与えてインスタンス化
+bit.add(2, 10)    # a2に10を加える
+bit.add(5, 5)     # a5に 5を加える
+print(bit.sum(3)) # a1～a3の合計を返す => 10
+print(bit.sum(6)) # a1～a6の合計を返す => 15
+bit.add(3, -6)    # a3に-6を加える
+print(bit.sum(6)) # a1～a6の合計を返す => 9
+print(bit.sum(6) - bit.sum(3))  # a4～a6の合計 => 5

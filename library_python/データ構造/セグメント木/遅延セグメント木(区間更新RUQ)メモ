@@ -1,0 +1,8 @@
+seg = seg = LazySegTree_RUQ(A, segfunc, ide_ele)
+
+◎操作
+1. ある1つの要素の更新
+update(l, r, x) : [l, r]の要素を x に更新
+
+2. ある区間の操作の結果を取得
+query(l, r) : [l, r)(l以上r未満の区間)から値を取得

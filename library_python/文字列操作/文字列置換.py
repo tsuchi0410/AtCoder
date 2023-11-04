@@ -1,0 +1,1 @@
+S.replace("na", "nya")

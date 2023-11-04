@@ -1,0 +1,29 @@
+# 要素数nのunionfindを用意する
+uf = UnionFind(n)
+
+# ノード x の根を見つける O(α(n))
+find(x)
+
+# 木に新たな要素をマージ O(α(n))
+unite(x, y)
+
+# x の属する木のサイズ O(α(n))
+size(x)
+
+# x と y が同じ木に属するか判定 O(α(n))
+same(x, y)
+
+# x の属する木に属する要素をリストで返す O(n)
+members(x)
+
+# すべての根をリストで返す O(n)
+roots()
+
+# グループの数を返す(連結成分の個数) O(n)
+group_count()
+
+# 全てのグループの要素情報を辞書で返す O(n)
+all_group_members()
+
+# 全てのグループの要素情報を簡単に出力する O(n)
+print(uf)

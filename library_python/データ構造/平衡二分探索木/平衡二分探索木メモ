@@ -1,0 +1,38 @@
+# 配列の作成
+# s = SortedSet()
+
+# len(s)
+# O(1)
+
+# 要素が含まれるか x in s / x not in s
+# O(√N)
+
+# 要素の追加 O(√N)
+# s.add(x)
+
+# 要素の削除 O(√N)
+# s.discard(x)
+
+# x より小さい / 以下 / より大きい / 以上 で 最小 / 最大 の要素を返す O(√N)
+# s.lt(x) / s.le(x) / s.gt(x) / s.ge(x)
+
+# 下から x 番目 / 上から ~x 番目 の要素を返す O(√N)
+# s[x]
+
+# xより小さい要素の数を返す O(√N)
+# s.index(x)
+
+# x以下の要素を返す O(√N)
+# s.index_right(x)
+
+
+
+SortedMultiSet
+x が s に含まれているかどうかに関わらずxを追加 O(√N)
+s.add(x)
+
+x が s に含まれていればxを1個削除 O(√N)
+s.discard(x)
+
+s に含まれる x の個数を返すO(√N)
+s.count(x)

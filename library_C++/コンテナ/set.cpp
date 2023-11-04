@@ -1,0 +1,33 @@
+// 宣言
+set<int> st;
+unordered_set<int> ust;
+
+// 追加
+st.insert(x);
+
+// 削除
+st.erase(x);
+
+// 所属判定 (true or false)
+st.contains(x);
+
+// 要素数
+st.size();
+
+// 空 (要素数 = 0) か (空なら true)
+st.empty();
+
+// 最小値 / 最大値 の取得 (set のみ)
+auto itr = st.begin();
+print(*itr);
+auto itr = --st.end();
+print(*itr);
+
+// set上の二分探索
+// 返り値はその値自身
+// lower -> x 以上の値を返す
+// upper -> x より上の値を返す
+auto it = st.lower_bound(x);
+auto it = st.upper_bound(x);
+
+// 値が存在しないときは auto itr = st.end() を返す

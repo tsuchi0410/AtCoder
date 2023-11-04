@@ -1,0 +1,20 @@
+スライドする区間の昇順(降順) k 個の総和を効率良く求めるデータ構造。
+
+計算量
+query O(1)
+insert, erase O(logN)
+set_k O((それ以前のkとの差)logN)
+
+MinimumSum(k) : 昇順 k 個に指定
+MaximumSum(k) : 降順 k 個に指定
+insert(x) : 要素 x を追加
+erase(x) : 要素 x を削除
+quety() : 上位 k 個の和
+set_k() : k を指定しなおす
+get_k() : k を返す
+size() : 全体の要素数
+
+MaximumSum<ll> pss(M);
+pss.insert(X);
+ll ans = pss.query();
+pss.set_k(k);
