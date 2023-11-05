@@ -241,32 +241,42 @@ lambda(G&&) -> lambda<std::decay_t<G>>;
 #  define debug(...) ;
 #endif
 
-
+ld ldinf = -10000000;
 
 int main(){
+  cout << fixed << setprecision(10);
   LL(N);
-  VEC(ll, a, N);
-  mint ans = 0;
-  rep(i, 1, N + 1){  // i 個選ぶ
-    vector<vector<vector<mint>>> dp(N + 1, vector<vector<mint>>(i + 1, vector<mint>(i)));
-    dp[0][0][0] = 1;    
-    rep(j, N){  
-      rep(k, i + 1){
-        rep(l, i){   
-          if(dp[j][k][l] == 0){
-            continue;
-          }
+  VEC(ld, P, N);
+  
+  reverse(P);
 
-          dp[j + 1][k][l] += dp[j][k][l];
+  vector<ld> v;
+  v.push_back(1);
+  rep(i, 5010){
+    v.push_back(v[i] * 0.9);
+  }
 
-          if(k + 1 <= i){
-            dp[j + 1][k + 1][(l + a[j]) % i] += dp[j][k][l];
-          }
-        }
+  vector<ld> cum_v = cum(v);
+
+  vector<vector<ld>> dp(N + 1, vector<ld>(N + 1, ldinf));
+  dp[0][0] = 0;
+  rep(i, N){  // i 個目まで見て
+    rep(j, N + 1){  // j 個選ぶ
+      if(dp[i][j] == ldinf){
+        continue;
       }
-    }
-    ans += dp[N][i][0];
-    debug(dp)
+      // debug(dp[i][j] + v[j] * P[i], cum_v[j + 1], (ld)1200 / sqrt(j + 1))
+      chmax(dp[i + 1][j + 1], dp[i][j] + v[j] * P[i]);
+      chmax(dp[i + 1][j], dp[i][j]);
+    }  
+  }
+
+  debug(dp)
+
+  ld ans = ldinf;
+  rep(i, 1, N + 1){
+    debug(dp[N][i] / cum_v[i] - (ld)1200 / sqrt(i))
+    chmax(ans, dp[N][i] / cum_v[i] - (ld)1200 / sqrt(i));
   }
   print(ans);
 }

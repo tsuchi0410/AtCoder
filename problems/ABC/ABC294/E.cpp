@@ -6,6 +6,7 @@ using namespace atcoder;
 /* 型, 定数 */
 using ll = long long;
 using ull = unsigned long long;
+using i128 = __int128;
 using ld = long double;
 // cout << fixed << setprecision(10);
 const ll INF = 1e18;
@@ -34,6 +35,7 @@ template<class T> auto max(const set<T>& s){ return *(--s.end()); }
 template<class T, class U> auto max(const map<T, U>& mp){ return *(--mp.end()); }
 #define sum(...) accumulate(all(__VA_ARGS__),0LL)
 template <typename T> vector<T> cum(vector<T> &v){ vector<T> s = {0}; for(ll i = 0; i < v.size(); i++) s.push_back(s[i] + v[i]); return s; }
+ll powll(ll n, ll r){ if (r == 0) return 1; else if (r % 2 == 0) return powll(n * n, (ll)(r / 2)); else return n * powll(n, r - 1); }
 template<class T, class U> ll count(const T& a, const U& b){ return count(all(a), b); }
 template <typename T> unordered_map<T, ll> ucounter(vector<T> &v){ unordered_map<T, ll> mp; for(ll i = 0; i < (ll)v.size(); i++) mp[v[i]]++; return mp; }
 template <typename T> map<T, ll> counter(vector<T> &v){ map<T, ll> mp; for(ll i = 0; i < (ll)v.size(); i++) mp[v[i]]++;
@@ -97,33 +99,33 @@ template <class T>
 using pqg = priority_queue<T, vector<T>, greater<T>>;  // 小さい順に取り出す
 // unordered_set, unordered_multiset, unordered_map, unordered_multimap で pair, vector, tuple を key に設定させる
 template<class T> size_t HashCombine(const size_t seed,const T &v){
-    return seed^(std::hash<T>()(v)+0x9e3779b9+(seed<<6)+(seed>>2));
+  return seed^(std::hash<T>()(v)+0x9e3779b9+(seed<<6)+(seed>>2));
 }
 template<class T,class S> struct std::hash<std::pair<T,S>>{
-    size_t operator()(const std::pair<T,S> &keyval) const noexcept {
-        return HashCombine(std::hash<T>()(keyval.first), keyval.second);
-    }
+  size_t operator()(const std::pair<T,S> &keyval) const noexcept {
+    return HashCombine(std::hash<T>()(keyval.first), keyval.second);
+  }
 };
 template<class T> struct std::hash<std::vector<T>>{
-    size_t operator()(const std::vector<T> &keyval) const noexcept {
-        size_t s=0;
-        for (auto&& v: keyval) s=HashCombine(s,v);
-        return s;
-    }
+  size_t operator()(const std::vector<T> &keyval) const noexcept {
+    size_t s=0;
+    for (auto&& v: keyval) s=HashCombine(s,v);
+    return s;
+  }
 };
 template<int N> struct HashTupleCore{
-    template<class Tuple> size_t operator()(const Tuple &keyval) const noexcept{
-        size_t s=HashTupleCore<N-1>()(keyval);
-        return HashCombine(s,std::get<N-1>(keyval));
-    }
+  template<class Tuple> size_t operator()(const Tuple &keyval) const noexcept{
+    size_t s=HashTupleCore<N-1>()(keyval);
+    return HashCombine(s,std::get<N-1>(keyval));
+  }
 };
 template <> struct HashTupleCore<0>{
-    template<class Tuple> size_t operator()(const Tuple &keyval) const noexcept{ return 0; }
+  template<class Tuple> size_t operator()(const Tuple &keyval) const noexcept{ return 0; }
 };
 template<class... Args> struct std::hash<std::tuple<Args...>>{
-    size_t operator()(const tuple<Args...> &keyval) const noexcept {
-        return HashTupleCore<tuple_size<tuple<Args...>>::value>()(keyval);
-    }
+  size_t operator()(const tuple<Args...> &keyval) const noexcept {
+    return HashTupleCore<tuple_size<tuple<Args...>>::value>()(keyval);
+  }
 };
 
 /* input */
@@ -135,80 +137,148 @@ inline void scan(Head&head,Tail&... tail){std::cin >> head; scan(tail...);}
 #define STR(...) string __VA_ARGS__;scan(__VA_ARGS__)
 #define CHAR(...) char __VA_ARGS__;scan(__VA_ARGS__)
 #define VEC(type, name, size) \
-    vector<type> name(size);    \
-    for(auto &x: name) cin >> x
+  vector<type> name(size);    \
+  for(auto &x: name) cin >> x
 #define VEC2(type1, name1, type2, name2, size) \
-    vector<type1> name1(size);    \
-    vector<type2> name2(size);    \
-    rep(i, size) cin >> name1[i] >> name2[i];
+  vector<type1> name1(size);    \
+  vector<type2> name2(size);    \
+  rep(i, size) cin >> name1[i] >> name2[i];
 #define VEC3(type1, name1, type2, name2, type3, name3, size) \
-    vector<type1> name1(size);    \
-    vector<type2> name2(size);    \
-    vector<type3> name3(size);    \
-    rep(i, size) cin >> name1[i] >> name2[i] >> name3[i];
+  vector<type1> name1(size);    \
+  vector<type2> name2(size);    \
+  vector<type3> name3(size);    \
+  rep(i, size) cin >> name1[i] >> name2[i] >> name3[i];
 #define VVEC(type, name, h, w) \
-    vector<vector<type>> name(h, vector<type>(w)); \
-    for(auto &row: name){ \
-        for(auto &in: row){ \
-            cin >> in; \
-        } \
-    }
+  vector<vector<type>> name(h, vector<type>(w)); \
+  for(auto &row: name){ \
+    for(auto &in: row){ \
+      cin >> in; \
+    } \
+  }
 
 /* print */
+// __init128
+std::ostream &operator<<(std::ostream &dest, __int128_t value) {
+  std::ostream::sentry s(dest);
+  if (s) {
+    __uint128_t tmp = value < 0 ? -value : value;
+    char buffer[128];
+    char *d = std::end(buffer);
+    do {
+      --d;
+      *d = "0123456789"[tmp % 10];
+      tmp /= 10;
+    } while (tmp != 0);
+    if (value < 0) {
+      --d;
+      *d = '-';
+    }
+    int len = std::end(buffer) - d;
+    if (dest.rdbuf()->sputn(d, len) != len) {
+      dest.setstate(std::ios_base::badbit);
+    }
+  }
+  return dest;
+}
+__int128 parse(string &s) {
+  __int128 ret = 0;
+  for (long unsigned int i = 0; i < s.length(); i++)
+    if ('0' <= s[i] && s[i] <= '9')
+      ret = 10 * ret + s[i] - '0';
+  return ret;
+}
 // mint
 ostream& operator<< (ostream& os,const mint& x){
-    return os << x.val();
+  return os << x.val();
 }
 void print() {
-    cout << endl;
+  cout << endl;
 }
 template <class Head, class... Tail>
 void print(Head&& head, Tail&&... tail) {
-    cout << head;
-    if (sizeof...(tail) != 0) cout << " ";
-    print(forward<Tail>(tail)...);
+  cout << head;
+  if (sizeof...(tail) != 0) cout << " ";
+  print(forward<Tail>(tail)...);
 }
 template <class T>
 void print(vector<T> &vec) {
-    for (auto& a : vec) {
-        cout << a;
-        if (&a != &vec.back()) cout << " ";
-    }
-    cout << endl;
+  for (auto& a : vec) {
+    cout << a;
+    if (&a != &vec.back()) cout << " ";
+  }
+  cout << endl;
 }
 template <class T>
 void print(vector<vector<T>> &df) {
-    for (auto& vec : df) {
-        print(vec);
-    }
+  for (auto& vec : df) {
+    print(vec);
+  }
 }
 
 /* lambda */
 template<class F>
 struct lambda {
 private:
-    F func;
+  F func;
 public:
-    template<class G>
-    constexpr lambda(G&& func) noexcept: func(std::forward<G>(func)) {}
-    template<class... Args>
-    constexpr decltype(auto) operator ()(Args&&... args) const noexcept(std::is_nothrow_invocable_v<F, Args...>) {
-        return func(*this, forward<Args>(args)...);
-    }
+  template<class G>
+  constexpr lambda(G&& func) noexcept: func(std::forward<G>(func)) {}
+  template<class... Args>
+  constexpr decltype(auto) operator ()(Args&&... args) const noexcept(std::is_nothrow_invocable_v<F, Args...>) {
+    return func(*this, forward<Args>(args)...);
+  }
 };
 template<class G>
 lambda(G&&) -> lambda<std::decay_t<G>>;
 
 /* debug */
 #ifdef LOCAL
-#   include <debug_print.hpp>
-#   define debug(...) cerr << "\033[33m"; debug_print::multi_print(#__VA_ARGS__, __VA_ARGS__); cerr << "\033[m";
+#  include <debug_print.hpp>
+#  define debug(...) cerr << "\033[33m"; debug_print::multi_print(#__VA_ARGS__, __VA_ARGS__); cerr << "\033[m";
 #else
-#   define debug(...) ;
+#  define debug(...) ;
 #endif
 
 
 
 int main(){
-  
+  LL(L, N1, N2);
+  VEC2(ll, v1, ll, l1, N1);
+  VEC2(ll, v2, ll, l2, N2);
+
+  vl q1;
+  vl q2;
+  ll sz1 = 0;
+  ll sz2 = 0;
+  ll i1 = 0;
+  ll i2 = 0;
+  ll ans = 0;
+  while(1){
+    if(sz1 == L and sz2 == L){
+      break;
+    }
+    if(sz1 == sz2){
+      q1.push_back(v1[i1]);
+      sz1 += l1[i1];
+      i1++;
+    }elif(sz2 < sz1){
+      if(q1[len(q1) - 1] == v2[i2]){
+        ans += min(sz1 - sz2, l2[i2]);
+      }
+      q2.push_back(v2[i2]);
+      sz2 += l2[i2];
+      i2++;
+    }else{
+      if(q2[len(q2) - 1] == v1[i1]){
+        ans += min(sz2 - sz1, l1[i1]);
+      }
+      q1.push_back(v1[i1]);
+      sz1 += l1[i1];
+      i1++;
+    }
+    debug(q1)
+    debug(q2)
+    debug(ans)
+  }
+  print(ans);
 }

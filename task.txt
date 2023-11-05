@@ -1,15 +1,18 @@
-鉄則本やり込む！
+・鉄則本やり込む！
 
-むずいDP
-https://atcoder.jp/contests/abc262/tasks/abc262_d
+・DP
 
-むずい数学
-https://atcoder.jp/contests/abc254/tasks/abc254_d
-
-木DP
+・木DP
 https://algo-logic.info/tree-dp/
 アルゴリズムロジックで勉強 -> hamayan
 
-期待値DP
+・期待値DP
 はまやん
 https://blog.hamayanhamayan.com/entry/2016/11/14/223727
+
+・セグメントツリー
+・平面走査
+
+
+・むずい数学
+https://atcoder.jp/contests/abc254/tasks/abc254_d

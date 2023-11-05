@@ -11,9 +11,7 @@ using ld = long double;
 // cout << fixed << setprecision(10);
 const ll INF = 1e18;
 const ld PI = acos(-1);
-const ll MOD = 998244353;
 using mint = atcoder::modint998244353;
-// const ll MOD = 1000000007;
 // using mint = atcoder::modint1000000007;
 
 /* 省略 */
@@ -36,7 +34,7 @@ template<class T> auto max(const T& a){ return *max_element(all(a)); }
 template<class T> auto max(const set<T>& s){ return *(--s.end()); }
 template<class T, class U> auto max(const map<T, U>& mp){ return *(--mp.end()); }
 #define sum(...) accumulate(all(__VA_ARGS__),0LL)
-template <typename T> vector<T> cum(vector<T> &v){ vector<T> s = {0}; for(ll i = 0; i < (ll)v.size(); i++) s.push_back(s[i] + v[i]); return s; }
+template <typename T> vector<T> cum(vector<T> &v){ vector<T> s = {0}; for(ll i = 0; i < v.size(); i++) s.push_back(s[i] + v[i]); return s; }
 ll powll(ll n, ll r){ if (r == 0) return 1; else if (r % 2 == 0) return powll(n * n, (ll)(r / 2)); else return n * powll(n, r - 1); }
 template<class T, class U> ll count(const T& a, const U& b){ return count(all(a), b); }
 template <typename T> unordered_map<T, ll> ucounter(vector<T> &v){ unordered_map<T, ll> mp; for(ll i = 0; i < (ll)v.size(); i++) mp[v[i]]++; return mp; }
@@ -184,7 +182,7 @@ std::ostream &operator<<(std::ostream &dest, __int128_t value) {
 }
 __int128 parse(string &s) {
   __int128 ret = 0;
-  for (ll i = 0; i < (ll)s.size(); i++)
+  for (long unsigned int i = 0; i < s.length(); i++)
     if ('0' <= s[i] && s[i] <= '9')
       ret = 10 * ret + s[i] - '0';
   return ret;
@@ -244,29 +242,54 @@ lambda(G&&) -> lambda<std::decay_t<G>>;
 
 
 int main(){
-  LL(N);
-  VEC(ll, a, N);
-  mint ans = 0;
-  rep(i, 1, N + 1){  // i 個選ぶ
-    vector<vector<vector<mint>>> dp(N + 1, vector<vector<mint>>(i + 1, vector<mint>(i)));
-    dp[0][0][0] = 1;    
-    rep(j, N){  
-      rep(k, i + 1){
-        rep(l, i){   
-          if(dp[j][k][l] == 0){
-            continue;
-          }
+  VVEC(ll, A, 9, 9);
+  bool f = true;
+  rep(i, 9){
+    uset<ll> s;
+    rep(j, 9){
+      s.insert(A[i][j]);
+    }
+    if(len(s) != 9){
+      f = false;
+    } 
+  }
 
-          dp[j + 1][k][l] += dp[j][k][l];
+  rep(j, 9){
+    uset<ll> s;
+    rep(i, 9){
+      s.insert(A[i][j]);
+    }
+    if(len(s) != 9){
+      f = false;
+    } 
+  }
 
-          if(k + 1 <= i){
-            dp[j + 1][k + 1][(l + a[j]) % i] += dp[j][k][l];
-          }
-        }
+  ll ii = 0;
+  ll jj = 0;
+  while(1){
+    uset<ll> s;
+    rep(i, ii, ii + 3){
+      rep(j, jj, jj + 3){
+        s.insert(A[i][j]);
       }
     }
-    ans += dp[N][i][0];
-    debug(dp)
+    if(len(s) != 9){
+      f = false;
+    }
+    
+    jj += 3;
+    if(jj == 9){
+      ii += 3;
+      jj = 0;
+    }
+    if(ii == 9){
+      break;
+    }
   }
-  print(ans);
+
+  if(f == true){
+    print("Yes");
+  }else{
+    print("No");
+  }
 }

@@ -1,15 +1,16 @@
 // 宣言
+// 1 次元
 vector<int> v;
 vector<int> v(N);
+// 2 次元
+vector<vector<mint>> dp(len(i), vector<mint>(len(j), 初期値));
+// 3 次元
+vector<vector<vector<mint>>> dp(len(i), vector<vector<mint>>(len(j), vector<mint>(len(k), 初期値)));
 
 // 後ろに追加
 v.push_back(x);
 // 後ろを削除
 v.pop_back(x);
-// アクセス
-v.at(i)
-// 要素数の取得
-v.size();
 // 要素数の変更
 v.resize(N, x);
 

@@ -244,29 +244,25 @@ lambda(G&&) -> lambda<std::decay_t<G>>;
 
 
 int main(){
-  LL(N);
-  VEC(ll, a, N);
-  mint ans = 0;
-  rep(i, 1, N + 1){  // i 個選ぶ
-    vector<vector<vector<mint>>> dp(N + 1, vector<vector<mint>>(i + 1, vector<mint>(i)));
-    dp[0][0][0] = 1;    
-    rep(j, N){  
-      rep(k, i + 1){
-        rep(l, i){   
-          if(dp[j][k][l] == 0){
-            continue;
-          }
+  LL(N, M);
+  VEC(ll, W, N);
+  VEC(ll, C, N);
 
-          dp[j + 1][k][l] += dp[j][k][l];
-
-          if(k + 1 <= i){
-            dp[j + 1][k + 1][(l + a[j]) % i] += dp[j][k][l];
-          }
+  // N, M, C
+  vector<vector<vector<ll>>> dp(N + 1, vector<vector<ll>>(M + 1, vector<ll>(10, 0)));
+  dp[0][0][0] = 1;
+  rep(i, N){
+    rep(j, M){
+      rep(k, 10){
+        if(dp[i][j][k] == 0){
+          continue;
+        }
+        chmax(dp[i + 1][j][k], dp[i][j][k]);
+        if(dp[i][j][C[i]] == 0 and j + W[i] <= M){
+          dp[i + 1][j + W[i]][C[i]] = 1;
         }
       }
     }
-    ans += dp[N][i][0];
-    debug(dp)
   }
-  print(ans);
+  debug(dp)
 }
