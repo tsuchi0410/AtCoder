@@ -244,5 +244,5 @@ lambda(G&&) -> lambda<std::decay_t<G>>;
 
 
 int main(){
-  vector<vector<mint>> dp(N, vector<mint>(N, 1));
+  debug("ok")
 }
