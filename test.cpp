@@ -18,9 +18,6 @@ using mint = atcoder::modint998244353;
 
 /* 省略 */
 #define pb push_back
-#define eb emplace_back
-#define fi first
-#define se second
 #define elif else if
 
 /* 関数 */
@@ -82,10 +79,6 @@ template <typename T> ll bisect_right(vector<T> &X, ll v){ return upper_bound(X.
 using vl = vector<ll>;
 using vvl = vector<vector<ll>>;
 using vvvl = vector<vector<vector<ll>>>;
-using vs = vector<string>;
-using vb = vector<bool>;
-using vm = vector<mint>;
-using vvm = vector<vm>;
 template <typename T>
 using uset = unordered_set<T>;
 template <typename T>
@@ -244,5 +237,5 @@ lambda(G&&) -> lambda<std::decay_t<G>>;
 
 
 int main(){
-  debug("ok")
+  
 }
