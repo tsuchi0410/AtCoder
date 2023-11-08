@@ -8,6 +8,8 @@ int main(){
   }
 
   // 累積和
-  auto s = cum(imos);
-
+  vector<ll> s = {0};
+  for(ll i = 0; i < (ll)imos.size(); i++){
+    s.push_back(s[i] + imos[i])
+  }
 }

@@ -1,11 +1,8 @@
 // 宣言
-// 1 次元
-vector<int> v;
-vector<int> v(N);
 // 2 次元
-vector<vector<mint>> dp(len(i), vector<mint>(len(j), 初期値));
+vector v(, vector<ll>());
 // 3 次元
-vector<vector<vector<mint>>> dp(len(i), vector<vector<mint>>(len(j), vector<mint>(len(k), 初期値)));
+vector v(, vector(, vector<ll>()));
 
 // 後ろに追加
 v.push_back(x);

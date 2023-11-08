@@ -237,5 +237,21 @@ lambda(G&&) -> lambda<std::decay_t<G>>;
 
 
 int main(){
-  
+  LL(N);
+  VEC(ll, A, N);
+  mint ans = 0;
+  rep(i, 60){
+    mint zero = 0;
+    mint one = 0;
+    rep(j, N){
+      if(A[j] >> i & 1){
+        one++;
+      }else{
+        zero++;
+      }
+    }
+    ans += (mint)(1LL << i) * one * zero;
+    
+  }
+  print(ans);
 }
