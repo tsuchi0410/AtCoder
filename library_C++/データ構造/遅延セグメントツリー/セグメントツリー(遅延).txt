@@ -1,0 +1,6 @@
+説明書
+https://atcoder.github.io/ac-library/production/document_ja/lazysegtree.html
+
+区間加算 : O(log N) 
+
+※　一応 INF は消しとく
