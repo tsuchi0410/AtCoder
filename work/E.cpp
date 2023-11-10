@@ -238,11 +238,11 @@ lambda(G&&) -> lambda<std::decay_t<G>>;
 
 int main(){
   LL(N, M, K, S, T, X);
-  vector<unordered_set<ll>> G(N + 1);
+  vector<vector<ll>> G(N + 1);
   rep(i, M){
     LL(u, v);
-    G[u].insert(v);
-    G[v].insert(u);
+    G[u].push_back(v);
+    G[v].push_back(u);
   }
 
   vector dp(K + 1, vector(N + 1, vector<mint>(2)));

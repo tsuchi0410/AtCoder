@@ -40,7 +40,7 @@ template <typename T> unordered_map<T, ll> ucounter(vector<T> &v){ unordered_map
 template <typename T> map<T, ll> counter(vector<T> &v){ map<T, ll> mp; for(ll i = 0; i < (ll)v.size(); i++) mp[v[i]]++;
 return mp; }
 template <typename T, typename U> bool exist(const vector<T>& v, const U& x){ auto it = find(v.begin(), v.end(), x); return it != v.end(); }
-template <typename T> vector<T> join(const vector<T> &v1, const vector<T> &v2) { vector<T> v3 = v1; v3.insert(v3.end(), all(v2)); return v3; }
+template <typename T> vector<T> jointest(const vector<T> &v1, const vector<T> &v2) { vector<T> v3 = v1; v3.insert(v3.end(), all(v2)); return v3; }
 template <typename T, typename U> T index(const vector<T> &v, U x) { for(ll i = 0; i < len(v); i++) if(v[i] == x) return i; return -1; }
 #define reverse(v) reverse(all(v))
 #define unique(v) sort(all(v)), v.erase(unique(all(v)), v.end()), v.shrink_to_fit()
@@ -237,15 +237,34 @@ lambda(G&&) -> lambda<std::decay_t<G>>;
 
 
 int main(){
-  ll N = 60;
-  rep(bit, 1LL << N){
-    
-    rep(i, N){
-      if((bit >> i) & 1 == 1){
-      
-      }else{
-        
+  LL(N, M, K, S, T, X);
+  vector<vector<ll>> G(N + 1);
+  rep(i, M){
+    LL(u, v);
+    G[u].push_back(v);
+    G[v].push_back(u);
+  }
+
+  vector dp(K + 1, vector(N + 1, vector<mint>(2)));
+  dp[0][S][0] = 1;
+  rep(i, K){
+    rep(v, N + 1){
+      rep(k, 2){
+        fore(u, G[v]){
+          if(u == X){
+            dp[i + 1][u][k ^ 1] += dp[i][v][k];
+          }else{
+            dp[i + 1][u][k] += dp[i][v][k];
+          }
+        }
       }
     }
   }
+
+  debug(dp)
+  print(dp[K][T][0]);
+
+  ll i = 0;
+  
+
 }
