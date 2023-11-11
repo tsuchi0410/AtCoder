@@ -233,40 +233,57 @@ lambda(G&&) -> lambda<std::decay_t<G>>;
 #  define debug(...) ;
 #endif
 
-// 8! 40000
+
 
 int main(){
   LL(N, M, K);
-  vector G(N, vector<ll>(N));
-  vector<uset<ll>> ck(N);
+  vvvl G(N);
   rep(i, M){
     LL(u, v, w);
     u--;
     v--;
-    ck[u].insert(v);
-    ck[v].insert(u);
-    G[u][v] = w;
-    G[v][u] = w;
+    G[u].push_back({v, w});
+    G[v].push_back({u, w});
   }
-  
-  
 
-  ll ans = 0;
-  do{
-    vector<bool> seen(N, false);
-    seen[v[0]] = true;
-    ll prev = v[0];
-    rep(i, 1, N){
-      if(seen[i] == true){
-        continue;
+  ll ans = INF;
+  vector<bool> seen(N, false);
+  lambda dfs = [&](auto&& dfs, ll v, ll score) -> void {
+    seen[v] = true;
+    bool ck = true;
+    debug(score)
+    debug(v, seen)
+    rep(i, N){
+      if(seen[i] == false){
+        ck = false;
       }
-      if(ck[prev].contains(i)){
-        seen[i] = true;
-        ans += G[prev][i];
-        ans %= K;
+    }
+    if(ck == true){
+      chmin(ans, score);
+      return;
+    }
+
+    fore(nxt, G[v]){
+      ll nv = nxt[0];
+      ll w = nxt[1];
+      if(seen[nv] == false){
+        score += w;
+        // score %= K;
+        dfs(nv, score);
+        seen[nv] = false;
+        score -= w;
+        // score %= K;
       }
-    }  
-  } while (next_permutation(all(v)));
+    }
+    return;
+  };
 
-
+  rep(i, N){
+    rep(j, N){
+      seen[j] = false;
+    }
+    debug(i)
+    dfs(i, 0);
+  }
+  debug(ans)
 }

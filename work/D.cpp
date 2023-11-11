@@ -233,40 +233,35 @@ lambda(G&&) -> lambda<std::decay_t<G>>;
 #  define debug(...) ;
 #endif
 
-// 8! 40000
+
 
 int main(){
-  LL(N, M, K);
-  vector G(N, vector<ll>(N));
-  vector<uset<ll>> ck(N);
-  rep(i, M){
-    LL(u, v, w);
-    u--;
-    v--;
-    ck[u].insert(v);
-    ck[v].insert(u);
-    G[u][v] = w;
-    G[v][u] = w;
+  STR(S);
+  ll N = len(S);
+  deque<char> dq;
+  rep(i, N){
+    dq.push_back(S[i]);
+    if(len(dq) >= 3){
+      char s1, s2, s3;
+      s3 = dq.back();
+      dq.pop_back();
+      s2 = dq.back();
+      dq.pop_back();
+      s1 = dq.back();
+      dq.pop_back();
+      if(s1 == 'A' and s2 == 'B' and s3 == 'C'){
+        ;
+      }else{
+        dq.push_back(s1);
+        dq.push_back(s2);
+        dq.push_back(s3);
+      }
+    }
   }
-  
-  
-
-  ll ans = 0;
-  do{
-    vector<bool> seen(N, false);
-    seen[v[0]] = true;
-    ll prev = v[0];
-    rep(i, 1, N){
-      if(seen[i] == true){
-        continue;
-      }
-      if(ck[prev].contains(i)){
-        seen[i] = true;
-        ans += G[prev][i];
-        ans %= K;
-      }
-    }  
-  } while (next_permutation(all(v)));
-
-
+  ll cnt = len(dq);
+  rep(i, cnt){
+    cout << dq.front();
+    dq.pop_front();
+  }
+  cout << endl;
 }

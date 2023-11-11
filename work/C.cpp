@@ -233,40 +233,27 @@ lambda(G&&) -> lambda<std::decay_t<G>>;
 #  define debug(...) ;
 #endif
 
-// 8! 40000
+
 
 int main(){
-  LL(N, M, K);
-  vector G(N, vector<ll>(N));
-  vector<uset<ll>> ck(N);
-  rep(i, M){
-    LL(u, v, w);
-    u--;
-    v--;
-    ck[u].insert(v);
-    ck[v].insert(u);
-    G[u][v] = w;
-    G[v][u] = w;
+  LL(N, Q);
+  STR(S);
+  vector<ll> a = {0};
+  rep(i, N - 1){
+    if(S[i] == S[i + 1]){
+      a.push_back(a[i] + 1);
+    }else{
+      a.push_back(a[i]);
+    }
   }
-  
-  
 
-  ll ans = 0;
-  do{
-    vector<bool> seen(N, false);
-    seen[v[0]] = true;
-    ll prev = v[0];
-    rep(i, 1, N){
-      if(seen[i] == true){
-        continue;
-      }
-      if(ck[prev].contains(i)){
-        seen[i] = true;
-        ans += G[prev][i];
-        ans %= K;
-      }
-    }  
-  } while (next_permutation(all(v)));
+  debug(a)
 
+  rep(i, Q){
+    LL(l, r);
+    l--;
+    r--;
+    print(a[r] - a[l]);
+  }
 
 }

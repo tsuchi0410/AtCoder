@@ -234,37 +234,47 @@ lambda(G&&) -> lambda<std::decay_t<G>>;
 #  define debug(...) ;
 #endif
 
-
+vector<vector<long long>> nCk(long long N, long long K){
+  std::string bitmask(K, 1);
+  bitmask.resize(N, 0);
+  vector<vector<long long>> res;
+  do{
+    vector<long long> v;
+    for(long long i = 0; i < N; ++i) if(bitmask[i]) v.push_back(i);
+    res.push_back(v);
+  }while(std::prev_permutation(bitmask.begin(), bitmask.end()));
+  return res;
+}
 
 int main(){
-  LL(N, M, K, S, T, X);
-  vector<vector<ll>> G(N + 1);
+  LL(N, M, K);
+  vector<vector<ll>> E;
   rep(i, M){
-    LL(u, v);
-    G[u].push_back(v);
-    G[v].push_back(u);
+    LL(u, v, w);
+    u--;
+    v--;
+    E.push_back({u, v, w});
   }
 
-  vector dp(K + 1, vector(N + 1, vector<mint>(2)));
-  dp[0][S][0] = 1;
-  rep(i, K){
-    rep(v, N + 1){
-      rep(k, 2){
-        fore(u, G[v]){
-          if(u == X){
-            dp[i + 1][u][k ^ 1] += dp[i][v][k];
-          }else{
-            dp[i + 1][u][k] += dp[i][v][k];
-          }
-        }
-      }
+  vector<vector<ll>> list = nCk(M, N - 1);
+
+  ll ans = INF;
+  rep(i, len(list)){
+    dsu uf(N);
+    ll cnt = 0;
+    rep(j, len(list[i])){
+      ll u = E[list[i][j]][0];
+      ll v = E[list[i][j]][1];
+      ll w = E[list[i][j]][2];
+      uf.merge(u, v);
+      cnt += w;
+      cnt %= K;
+    }
+    if(len(uf.groups()) == 1){
+      chmin(ans, cnt);
     }
   }
-
-  debug(dp)
-  print(dp[K][T][0]);
-
-  ll i = 0;
+  print(ans);
   
-
+  
 }

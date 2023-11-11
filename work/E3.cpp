@@ -40,6 +40,7 @@ template <typename T> unordered_map<T, ll> ucounter(vector<T> &v){ unordered_map
 template <typename T> map<T, ll> counter(vector<T> &v){ map<T, ll> mp; for(ll i = 0; i < (ll)v.size(); i++) mp[v[i]]++;
 return mp; }
 template <typename T, typename U> bool exist(const vector<T>& v, const U& x){ auto it = find(v.begin(), v.end(), x); return it != v.end(); }
+template <typename T> vector<T> jointest(const vector<T> &v1, const vector<T> &v2) { vector<T> v3 = v1; v3.insert(v3.end(), all(v2)); return v3; }
 template <typename T, typename U> T index(const vector<T> &v, U x) { for(ll i = 0; i < len(v); i++) if(v[i] == x) return i; return -1; }
 #define reverse(v) reverse(all(v))
 #define unique(v) sort(all(v)), v.erase(unique(all(v)), v.end()), v.shrink_to_fit()
@@ -233,40 +234,47 @@ lambda(G&&) -> lambda<std::decay_t<G>>;
 #  define debug(...) ;
 #endif
 
-// 8! 40000
+vector<vector<long long>> nCk(long long N, long long K){
+  std::string bitmask(K, 1);
+  bitmask.resize(N, 0);
+  vector<vector<long long>> res;
+  do{
+    vector<long long> v;
+    for(long long i = 0; i < N; ++i) if(bitmask[i]) v.push_back(i);
+    res.push_back(v);
+  }while(std::prev_permutation(bitmask.begin(), bitmask.end()));
+  return res;
+}
 
 int main(){
   LL(N, M, K);
-  vector G(N, vector<ll>(N));
-  vector<uset<ll>> ck(N);
+  vector<vector<ll>> E;
   rep(i, M){
     LL(u, v, w);
     u--;
     v--;
-    ck[u].insert(v);
-    ck[v].insert(u);
-    G[u][v] = w;
-    G[v][u] = w;
+    E.push_back({u, v, w});
   }
+
+  vector<vector<ll>> list = nCk(M, N - 1);
+
+  ll ans = INF;
+  rep(i, len(list)){
+    dsu uf(N);
+    ll cnt = 0;
+    rep(j, len(list[i])){
+      ll u = E[list[i][j]][0];
+      ll v = E[list[i][j]][1];
+      ll w = E[list[i][j]][2];
+      uf.merge(u, v);
+      cnt += w;
+      cnt %= K;
+    }
+    if(len(uf.groups()) == 1){
+      chmin(ans, cnt);
+    }
+  }
+  print(ans);
   
   
-
-  ll ans = 0;
-  do{
-    vector<bool> seen(N, false);
-    seen[v[0]] = true;
-    ll prev = v[0];
-    rep(i, 1, N){
-      if(seen[i] == true){
-        continue;
-      }
-      if(ck[prev].contains(i)){
-        seen[i] = true;
-        ans += G[prev][i];
-        ans %= K;
-      }
-    }  
-  } while (next_permutation(all(v)));
-
-
 }

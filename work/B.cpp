@@ -233,40 +233,35 @@ lambda(G&&) -> lambda<std::decay_t<G>>;
 #  define debug(...) ;
 #endif
 
-// 8! 40000
+
 
 int main(){
-  LL(N, M, K);
-  vector G(N, vector<ll>(N));
-  vector<uset<ll>> ck(N);
-  rep(i, M){
-    LL(u, v, w);
-    u--;
-    v--;
-    ck[u].insert(v);
-    ck[v].insert(u);
-    G[u][v] = w;
-    G[v][u] = w;
-  }
-  
-  
-
+  LL(N);
+  VEC(ll, D, N);
   ll ans = 0;
-  do{
-    vector<bool> seen(N, false);
-    seen[v[0]] = true;
-    ll prev = v[0];
-    rep(i, 1, N){
-      if(seen[i] == true){
-        continue;
-      }
-      if(ck[prev].contains(i)){
-        seen[i] = true;
-        ans += G[prev][i];
-        ans %= K;
-      }
-    }  
-  } while (next_permutation(all(v)));
 
+  map<ll, set<ll>> mp;
+  rep(i, 1, 10){
+    mp[i].insert(i);
+    mp[i].insert(i * 10 + i);
+    mp[i].insert(i * 100 + i * 10 + i);
+  
+    mp[i * 10 + i].insert(i);
+    mp[i * 10 + i].insert(i * 10 + i);
+    mp[i * 10 + i].insert(i * 100 + i * 10 + i);
 
+    mp[i * 100 + i * 10 + i].insert(i);
+    mp[i * 100 + i * 10 + i].insert(i);
+    mp[i * 100 + i * 10 + i].insert(i);
+  }
+
+  rep(i, N){
+    rep(j, 1, D[i] + 1){
+      if(mp[i + 1].contains(j)){
+        debug(i + 1, j)
+        ans++;
+      }
+    }
+  }
+  print(ans);
 }
