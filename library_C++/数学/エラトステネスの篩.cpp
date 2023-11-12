@@ -2,7 +2,7 @@
 1 以上 N 以下の整数が素数かどうかを返す
 O(NloglogN)
 
-vl ans = primes(N);
+vector<ll> ans = primes(N);
 """
 
 vector<ll> primes(int N) {
