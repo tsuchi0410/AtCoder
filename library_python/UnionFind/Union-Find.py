@@ -18,17 +18,17 @@ class UnionFind():
         self.n = n
         self.parents = [-1] * n
 
-    def find(self, x):
+    def root(self, x):
         """
         ノードxの根を見つける
         """
         if self.parents[x] < 0:
             return x
         else:
-            self.parents[x] = self.find(self.parents[x])
+            self.parents[x] = self.root(self.parents[x])
             return self.parents[x]
 
-    def unite(self, x, y):
+    def merge(self, x, y):
         """
         木に新たな要素を併合（マージ）
 
@@ -37,8 +37,8 @@ class UnionFind():
         x, y : int
             併合するノード
         """
-        x = self.find(x)
-        y = self.find(y)
+        x = self.root(x)
+        y = self.root(y)
 
         if x == y:
             return
@@ -53,20 +53,20 @@ class UnionFind():
         """
         xの属する木のサイズ
         """
-        return -self.parents[self.find(x)]
+        return -self.parents[self.root(x)]
 
     def same(self, x, y):
         """
         x, yが同じ木に属するか判定
         """
-        return self.find(x) == self.find(y)
+        return self.root(x) == self.root(y)
 
     def members(self, x):
         """
         
         """        
-        root = self.find(x)
-        return [i for i in range(self.n) if self.find(i) == root]
+        root = self.root(x)
+        return [i for i in range(self.n) if self.root(i) == root]
 
     def roots(self):
         """
@@ -86,7 +86,7 @@ class UnionFind():
         """         
         group_members = defaultdict(list)
         for member in range(self.n):
-            group_members[self.find(member)].append(member)
+            group_members[self.root(member)].append(member)
         return group_members
 
     def __str__(self):

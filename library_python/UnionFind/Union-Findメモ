@@ -2,10 +2,10 @@
 uf = UnionFind(n)
 
 # ノード x の根を見つける O(α(n))
-find(x)
+root(x)
 
 # 木に新たな要素をマージ O(α(n))
-unite(x, y)
+merge(x, y)
 
 # x の属する木のサイズ O(α(n))
 size(x)

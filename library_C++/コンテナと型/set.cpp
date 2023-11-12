@@ -17,6 +17,10 @@ st.size();
 // 空 (要素数 = 0) か (空なら true)
 st.empty();
 
+string -> set の変換
+string s = "abc";
+set<char> st(all(s));
+
 // 最小値 / 最大値 の取得 (set のみ)
 auto itr = st.begin();
 print(*itr);
