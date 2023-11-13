@@ -33,15 +33,39 @@ template<class T> auto max(const T& a){ return *max_element(all(a)); }
 template<class T> auto max(const set<T>& s){ return *(--s.end()); }
 template<class T, class U> auto max(const map<T, U>& mp){ return *(--mp.end()); }
 #define sum(...) accumulate(all(__VA_ARGS__),0LL)
-template <typename T> vector<T> cum(vector<T> &v){ vector<T> s = {0}; for(ll i = 0; i < (ll)v.size(); i++) s.push_back(s[i] + v[i]); return s; }
-ll powll(ll n, ll r){ if (r == 0) return 1; else if (r % 2 == 0) return powll(n * n, (ll)(r / 2)); else return n * powll(n, r - 1); }
-template<class T, class U> ll count(const T& a, const U& b){ return count(all(a), b); }
-template <typename T> unordered_map<T, ll> ucounter(vector<T> &v){ unordered_map<T, ll> mp; for(ll i = 0; i < (ll)v.size(); i++) mp[v[i]]++; return mp; }
-template <typename T> map<T, ll> counter(vector<T> &v){ map<T, ll> mp; for(ll i = 0; i < (ll)v.size(); i++) mp[v[i]]++;
-return mp; }
-template <typename T, typename U> bool exist(const vector<T>& v, const U& x){ auto it = find(v.begin(), v.end(), x); return it != v.end(); }
-template <typename T> vector<T> jointest(const vector<T> &v1, const vector<T> &v2) { vector<T> v3 = v1; v3.insert(v3.end(), all(v2)); return v3; }
-template <typename T, typename U> T index(const vector<T> &v, U x) { for(ll i = 0; i < len(v); i++) if(v[i] == x) return i; return -1; }
+template<class T, class U>ll count(const T& a, const U& b){ return count(all(a), b); }
+template <typename T>
+long long index(const T& ctr, const T& subctr) {
+  auto itr = search(ctr.begin(), ctr.end(), subctr.begin(), subctr.end());
+  if(itr == ctr.end()){
+    return -1;
+  }else{
+    return distance(ctr.begin(), itr);
+  }
+}
+template <typename T>
+vector<T> cum(vector<T> &v){
+  vector<T> s = {0};
+  for(ll i = 0; i < (ll)v.size(); i++) s.push_back(s[i] + v[i]);
+  return s;
+}
+ll powll(ll n, ll r){
+  if (r == 0) return 1;
+  else if (r % 2 == 0) return powll(n * n, (ll)(r / 2));
+  else return n * powll(n, r - 1);
+}
+template <typename T>
+unordered_map<T, ll> ucounter(vector<T> &v){
+  unordered_map<T, ll> mp;
+  for(ll i = 0; i < (ll)v.size(); i++) mp[v[i]]++;
+  return mp;
+}
+template <typename T>
+map<T, ll> counter(vector<T> &v){
+  map<T, ll> mp;
+  for(ll i = 0; i < (ll)v.size(); i++) mp[v[i]]++;
+return mp;
+}
 #define reverse(v) reverse(all(v))
 #define unique(v) sort(all(v)), v.erase(unique(all(v)), v.end()), v.shrink_to_fit()
 template<typename T> void chmin(T& a, T b) { a = min(a, b); }
@@ -234,20 +258,8 @@ lambda(G&&) -> lambda<std::decay_t<G>>;
 #  define debug(...) ;
 #endif
 
-template <typename T>
-long long search(const T& container, const T& subcontainer) {
-  auto itr = std::ranges::search(container, subcontainer);
-  if(itr == container.end()){
-    return -1;
-  }else{
-    return std::distance(container.begin(), itr);
-  }
-}
+
 
 int main(){
-  vector<ll> v = {1, 2, 3, 4, 5};
-  vector<ll> v2 = {3, 4};
-  print(search(v, v2));
-
 
 }

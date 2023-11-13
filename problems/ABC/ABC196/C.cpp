@@ -236,41 +236,18 @@ lambda(G&&) -> lambda<std::decay_t<G>>;
 
 
 int main(){
-  LL(N, K);
-  VEC(ll, A, N);
-  ll idx = index(A, 1);
+  LL(N);
   ll cnt = 0;
-
-  if(K == N){
-    print(1);
-    return 0;
-  }
-
-  // 0, 1, 2, 3, 4
-
-  ll ans = INF;
-  rep(i, N){
-    if(i < idx){
-      if(idx <= i + K - 1){
-        ll le = (idx + 1 - K) / (K - 1);
-        ll ri = (N + (K - 1) - (i + K)) / (K - 1);
-        // debug(le, ri)
-        chmin(ans, le + ri + 1);
-      }
-    }elif(i == idx){
-      ll le = (idx + 1 - K) / (K - 1);
-      ll ri = (N + (K - 1) - (i + K)) / (K - 1);
-      // debug(le, ri)
-      chmin(ans, le + ri + 1);
+  rep(i, 1, N){
+    string s = "";
+    s += lltos(i) + lltos(i);
+    ll t;
+    t = stoll(s);
+    if(t <= N){
+      cnt++;
     }else{
-      if(i - (K - 1) <= idx){
-        ll le = (i + 1 - K) / (K - 1);
-        ll ri = (N + (K - 1) - (i + K)) / (K - 1);
-        debug(le, ri)
-        chmin(ans, le + ri + 1);
-      }
-    }
+      break;
+    } 
   }
-
-  print(ans);
+  print(cnt);
 }
