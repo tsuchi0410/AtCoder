@@ -234,8 +234,20 @@ lambda(G&&) -> lambda<std::decay_t<G>>;
 #  define debug(...) ;
 #endif
 
-
+template <typename T>
+long long search(const T& container, const T& subcontainer) {
+  auto itr = std::ranges::search(container, subcontainer);
+  if(itr == container.end()){
+    return -1;
+  }else{
+    return std::distance(container.begin(), itr);
+  }
+}
 
 int main(){
+  vector<ll> v = {1, 2, 3, 4, 5};
+  vector<ll> v2 = {3, 4};
+  print(search(v, v2));
+
 
 }
