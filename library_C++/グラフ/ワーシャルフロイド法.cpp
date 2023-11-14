@@ -8,7 +8,7 @@
 
 int main(){
   LL(N, M);
-  vvl dist(N, vl(N, INF));
+  vector dist(N, vector<ll>(N, INF));
   rep(i, M){
     LL(u, v, w);
     dist[u][v] = w;
