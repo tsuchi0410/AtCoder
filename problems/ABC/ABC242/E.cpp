@@ -261,18 +261,54 @@ lambda(G&&) -> lambda<std::decay_t<G>>;
 
 
 int main(){
-  LL(X, N);
-  VEC(ll, p, N);
-  ll ans = INF;
-  map<ll, set<ll>> mp;
-  rep(i, 0, 110){
-    if(index(p, {i}) == -1){
-      if(abs(X - i) <= ans){
-        chmin(ans, abs(X - i));
-        mp[abs(X - i)].insert(i);
+  LL(T);
+  rep(_, T){
+    LL(N);
+    STR(S);
+    // 0 -> 一致
+    // 1 -> 不一致
+    if(N % 2 == 0){
+      vector dp(N / 2 + 1, vector<mint>(2));
+      dp[0][0] = 1;
+      dp[0][1] = 0;
+      rep(i, N / 2){
+        dp[i + 1][0] += dp[i][0];
+        dp[i + 1][1] += dp[i][1] * 26;
+        mint idx = S[i] - 65;
+        dp[i + 1][1] += dp[i][0] * idx;  
+      }
+      
+      string t1 = S.substr(0, N / 2);
+      string t2 = S.substr(N / 2, N / 2);
+      reverse(t1);
+      debug(t1, t2)
+      if(t1 <= t2){
+        print(dp[N / 2][0] + dp[N / 2][1]);
+      }else{
+        print(dp[N / 2][1]);
+      }
+    }else{
+      vector dp(N / 2 + 2, vector<mint>(2));
+      dp[0][0] = 1;
+      dp[0][1] = 0;
+      rep(i, N / 2 + 1){
+        dp[i + 1][0] += dp[i][0];
+        dp[i + 1][1] += dp[i][1] * 26;
+        mint idx = S[i] - 65;
+        dp[i + 1][1] += dp[i][0] * idx;  
+      }
+
+      debug(dp)
+      string t1 = S.substr(0, N / 2);
+      string t2 = S.substr(N / 2 + 1, N / 2);
+      reverse(t1);
+      debug(t1, t2)
+      if(t1 <= t2){
+        print(dp[N / 2 + 1][0] + dp[N / 2 + 1][1]);
+      }else{
+        print(dp[N / 2 + 1][1]);
       }
     }
+    
   }
-  auto[k, v] = min(mp);
-  print(min(v));
 }

@@ -17,9 +17,14 @@ st.size();
 // 空 (要素数 = 0) か (空なら true)
 st.empty();
 
-string -> set の変換
+// string -> set の変換
 string s = "abc";
 set<char> st(all(s));
+
+// vector -> set の変換
+vector v = {1, 1, 2, 3};
+set<ll> st(all(v));
+
 
 // 最小値 / 最大値 の取得 (set のみ)
 auto itr = st.begin();

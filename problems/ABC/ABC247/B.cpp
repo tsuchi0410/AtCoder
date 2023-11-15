@@ -261,18 +261,26 @@ lambda(G&&) -> lambda<std::decay_t<G>>;
 
 
 int main(){
-  LL(X, N);
-  VEC(ll, p, N);
-  ll ans = INF;
-  map<ll, set<ll>> mp;
-  rep(i, 0, 110){
-    if(index(p, {i}) == -1){
-      if(abs(X - i) <= ans){
-        chmin(ans, abs(X - i));
-        mp[abs(X - i)].insert(i);
+  LL(N);
+  VEC2(string, s, string, t, N);
+  rep(i, N){
+    bool f1 = true;
+    bool f2 = true;
+    rep(j, N){
+      if(i == j){
+        continue;
+      }
+      if(s[i] == s[j] or s[i] == t[j]){
+        f1 = false;
+      }
+      if(t[i] == s[j] or t[i] == t[j]){
+        f2 = false;
       }
     }
+    if(f1 == false and f2 == false){
+      print("No");
+      return 0;
+    }
   }
-  auto[k, v] = min(mp);
-  print(min(v));
+  print("Yes");
 }

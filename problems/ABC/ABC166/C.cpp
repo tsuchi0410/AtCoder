@@ -261,18 +261,19 @@ lambda(G&&) -> lambda<std::decay_t<G>>;
 
 
 int main(){
-  LL(X, N);
-  VEC(ll, p, N);
-  ll ans = INF;
-  map<ll, set<ll>> mp;
-  rep(i, 0, 110){
-    if(index(p, {i}) == -1){
-      if(abs(X - i) <= ans){
-        chmin(ans, abs(X - i));
-        mp[abs(X - i)].insert(i);
-      }
+  LL(N, M);
+  VEC(ll, H, N);
+  vector<bool> ans(N, true);
+  rep(i, M){
+    LL(A, B);
+    A--;
+    B--;
+    if(H[A] <= H[B]){
+      ans[A] = false;
+    }
+    if(H[A] >= H[B]){
+      ans[B] = false;
     }
   }
-  auto[k, v] = min(mp);
-  print(min(v));
+  print(count(ans, true));
 }

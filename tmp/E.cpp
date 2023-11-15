@@ -261,18 +261,48 @@ lambda(G&&) -> lambda<std::decay_t<G>>;
 
 
 int main(){
-  LL(X, N);
-  VEC(ll, p, N);
-  ll ans = INF;
-  map<ll, set<ll>> mp;
-  rep(i, 0, 110){
-    if(index(p, {i}) == -1){
-      if(abs(X - i) <= ans){
-        chmin(ans, abs(X - i));
-        mp[abs(X - i)].insert(i);
+  LL(N);
+  VEC(ll, A, N);
+  VEC(string, S, N);
+
+  vector dist(N, vector<ll>(N, INF));
+  rep(i, N){
+    rep(j, N){
+      if(S[i][j] == 'Y'){
+        dist[i][j] = 1;
       }
     }
   }
-  auto[k, v] = min(mp);
-  print(min(v));
+  rep(i, N){
+    dist[i][i] = 0;
+  }
+
+  // k 以下の都市を通るときの全点対最短経路
+  vector cost(N, vector<ll>(N));
+  rep(i, N){
+    cost[i][i] = A[i];
+  }
+  
+  rep(k, N){
+    rep(i, N){
+      rep(j, N){
+        if(dist[i][k] + dist[k][j] <= dist[i][j]){
+          chmin(dist[i][j], dist[i][k] + dist[k][j]);
+          chmax(cost[i][j], cost[i][k] + cost[k][j]);
+        }
+      }
+    }
+  }
+
+  debug(dist)
+  debug(cost)
+
+  LL(Q);
+  rep(i, Q){
+    LL(u, v);
+    u--;
+    v--;
+    // print(ans);
+  }
+  
 }

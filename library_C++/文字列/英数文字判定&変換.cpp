@@ -22,6 +22,14 @@ c -= 32;
 char c = 'A';
 c += 32;
 
+// 英小文字(char) -> 数値（何番目か）
+char c = 'a';
+c -= 97; // 0
+
+// 英小文字(char) -> 数値（何番目か）
+char c = 'A';
+c -= 65; // 0
+
 // 英小文字(string) -> 英大文字(string) 
 string s = "hello";
 transform(s.begin(), s.end(), s.begin(), ::toupper);
