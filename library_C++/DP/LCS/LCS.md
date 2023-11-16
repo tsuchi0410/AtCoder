@@ -1,11 +1,8 @@
-<!--
-
-verified
+## 問題 LCS(最長共通部分列)
 F - LCS
 https://atcoder.jp/contests/dp/tasks/dp_f
+---
 
--->
-## 問題 LCS(最長共通部分列)
 文字列 s, t が与えられます。 s の部分列かつ t の部分列であるような文字列のうち、最長のものをひとつ求めてください。
 
 例

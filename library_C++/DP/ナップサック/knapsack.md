@@ -1,11 +1,7 @@
-<!--
-
-verified
+## 問題 ナップサック DP
 D - Knapsack 1
 https://atcoder.jp/contests/dp/tasks/dp_d
-
--->
-## 問題 ナップサック DP
+---
 ナップサックの重量 W 以下で価値の総和を最大化
 
 ### コード
