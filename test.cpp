@@ -60,11 +60,21 @@ unordered_map<T, ll> ucounter(vector<T> &v){
   for(ll i = 0; i < (ll)v.size(); i++) mp[v[i]]++;
   return mp;
 }
+unordered_map<char, ll> ucounter(string &v){
+  unordered_map<char, ll> mp;
+  for(ll i = 0; i < (ll)v.size(); i++) mp[v[i]]++;
+  return mp;
+}
 template <typename T>
 map<T, ll> counter(vector<T> &v){
   map<T, ll> mp;
   for(ll i = 0; i < (ll)v.size(); i++) mp[v[i]]++;
-return mp;
+  return mp;
+}
+map<char, ll> counter(string &v){
+  map<char, ll> mp;
+  for(ll i = 0; i < (ll)v.size(); i++) mp[v[i]]++;
+  return mp;
 }
 #define reverse(v) reverse(all(v))
 #define unique(v) sort(all(v)), v.erase(unique(all(v)), v.end()), v.shrink_to_fit()
@@ -261,18 +271,39 @@ lambda(G&&) -> lambda<std::decay_t<G>>;
 
 
 int main(){
-  LL(X, N);
-  VEC(ll, p, N);
-  ll ans = INF;
-  map<ll, set<ll>> mp;
-  rep(i, 0, 110){
-    if(index(p, {i}) == -1){
-      if(abs(X - i) <= ans){
-        chmin(ans, abs(X - i));
-        mp[abs(X - i)].insert(i);
+  STR(S, T);
+  
+  ll N = len(S);
+  ll M = len(T);
+  vector dp(N + 1, vector<ll>(M + 1));
+  rep(i, N){
+    rep(j, M){
+      if(S[i] == T[j]){
+        chmax(dp[i + 1][j + 1], dp[i][j] + 1);
+      }else{
+        dp[i + 1][j + 1] = max(dp[i + 1][j], dp[i][j + 1]);
       }
     }
   }
-  auto[k, v] = min(mp);
-  print(min(v));
+
+  debug(dp)
+
+  string ans = "";
+  ll i = N;
+  ll j = M;
+  while(0 < i and 0 < j){
+    if(dp[i][j] == dp[i - 1][j]){
+      i--;
+    }else if(dp[i][j] == dp[i][j - 1]){
+      j--;
+    }else{
+      i--;
+      j--;
+      ans += T[j];
+    }
+  }
+
+  reverse(ans);
+  print(ans);
+
 }

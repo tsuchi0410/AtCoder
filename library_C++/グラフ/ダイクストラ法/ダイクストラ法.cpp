@@ -15,21 +15,21 @@ https://algo-method.com/tasks/1008
 
 int main(){
   LL(N, M);
-  vvvl G(N);
+  vector<vector<vector<ll>>> G(N);
   rep(_, M){
     LL(u, v, w);
     u--;
     v--;
-    G[u].pb({v, w});
-    G[v].pb({u, w});
+    G[u].push_back({v, w});
+    G[v].push_back({u, w});
   }
 
-  vl dist(N, INF);
+  vector<ll> dist(N, INF);
   dist[0] = 0;
   vector<bool> seen(N, false);
 
   // {cost, v}
-  pqg<vl> q;
+  pqg<vector<ll>> q;
   q.push({0, 0});
 
   while(len(q)) {

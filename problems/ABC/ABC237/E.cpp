@@ -261,5 +261,58 @@ lambda(G&&) -> lambda<std::decay_t<G>>;
 
 
 int main(){
-  
+  LL(N, M);
+  VEC(ll, H, N);
+
+  vector<vector<vector<ll>>> G(N);
+  rep(_, M){
+    LL(u, v);
+    u--;
+    v--;
+    if(H[u] <= H[v]){
+      G[u].push_back({v, H[v] - H[u]});
+      G[v].push_back({u, 0});
+    }elif(H[v] < H[u]){
+      G[u].push_back({v, 0});
+      G[v].push_back({u, H[u] - H[v]});
+    }
+  }
+
+  debug(G)
+
+  vector<ll> dist(N, INF);
+  dist[0] = H[0];
+  vector<bool> seen(N, false);
+
+  // {cost, v}
+  pqg<vector<ll>> q;
+  q.push({dist[0], 0});
+
+  while(len(q)) {
+    ll cost_v = q.top()[0];
+    ll v = q.top()[1];
+    q.pop();
+
+    if(seen[v]) continue;
+
+    seen[v] = true;
+    fore(i, G[v]){
+      ll nv = i[0];
+      ll cost_nv = i[1];
+      if(dist[nv] > cost_v + cost_nv){
+        dist[nv] = cost_v + cost_nv;
+        q.push({dist[nv], nv});
+      }
+    }
+  }
+
+  debug(dist)
+
+  ll ans = 0;
+  rep(i, 1, N){
+    chmax(ans, dist[0] + H[0] - (dist[i] + H[i]));
+  }
+
+  print(ans);
+
 }
