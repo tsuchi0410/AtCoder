@@ -8,7 +8,7 @@ BFS
 
 int main(){
   LL(N, M);
-  vvl G(N);
+  vector<vector<ll>> G(N);
   rep(i, M){
     LL(u, v);
     u--;
@@ -17,7 +17,7 @@ int main(){
     G[v].push_back(u);
   }
 
-  vl dist(N, -1);
+  vector<ll> dist(N, -1);
   queue<ll> q;
   dist[0] = 0;
   q.push(0);

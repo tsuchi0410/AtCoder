@@ -1,9 +1,4 @@
-N = int(input())
-l = [1]
-for i in range(1, N):
-    l2 = l + [i + 1] + l
-    l = l2
+import math
 
-for i in range(len(l)):
-    print(l[i], end = " ")
-print()
+# 100C50
+print(math.factorial(100) // math.factorial(50))

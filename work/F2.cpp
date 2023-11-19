@@ -106,7 +106,18 @@ template <typename T> ll bisect_right(vector<T> &X, ll v){ return upper_bound(X.
 #define fore(...) OVERLOAD_FORE(__VA_ARGS__, FORE2, FORE1)(__VA_ARGS__)
 
 /* コンテナ */
+using vl = vector<ll>;
+using vvl = vector<vector<ll>>;
+using vvvl = vector<vector<vector<ll>>>;
+template <typename T>
+using uset = unordered_set<T>;
+template <typename T>
+using mset = multiset<T>;
 #define discard(s, x) {auto itr_ = s.find((x)); if (itr_ != s.end()) s.erase(itr_); }
+template <typename T, typename U>
+using mmap = multimap<T, U>;
+template <typename T, typename U>
+using umap = unordered_map<T, U>;
 template <class T>
 using pq = priority_queue<T>;  // 大きい順に取り出す
 template <class T>
@@ -402,58 +413,28 @@ lambda(G&&) -> lambda<std::decay_t<G>>;
 
 
 int main(){
-  LL(N, M);
-  STR(S, T);
+  LL(N, Q);
+  VEC(ll, C, N);
 
-  queue<ll> q;
-  vector<bool> seen(N, false);
-  rep(i, N - M + 1){
-    if(S.substr(i, M) == T){
-      seen[i] = true;
-      q.push(i);
-      rep(j, i, i + M){
-        S[j] = '#';
-      }
-    }
+  vector<set<ll>> v(N);
+  rep(i, N){
+    v[i].insert(C[i]);
   }
 
-  while (len(q)){
-    ll v = q.front();
-    q.pop();
+  rep(i, Q){
+    LL(a, b);
+    a--;
+    b--;
+    
+    // a -> b
 
-    rep(i, v - M - 1, v + M){
-      if(i < 0 or N <= i){
-        continue;
-      }
-      bool f = true;
-      ll c = 0;
-      vector<ll> buf;
-      rep(j, i, i + M){
-        if(S[j] != '#'){
-          if(S[j] != T[c]){
-            f = false;
-            break;
-          }else{
-            buf.push_back(j);
-          }
-        }
-        c++;
-      }
-      if(f == true and seen[i] == false){
-        seen[i] = true;
-        fore(idx, buf){
-          S[idx] = '#';
-        }
-        q.push(i);
-      }
+    if(len(v[a]) <= len(v[b])){
+      v[b].merge(v[a]);
+    }else{
+      swap(v[a], v[b]);
+      v[b].merge(v[a]);
     }
-  }
-
-  debug(S)
-
-  if(count(S, '#') == N){
-    print("Yes");
-  }else{
-    print("No");
+    print(len(v[b]));
+    v[a].clear();
   }
 }

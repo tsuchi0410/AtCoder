@@ -7,10 +7,12 @@ using ull = unsigned long long;
 using i128 = __int128;
 using ld = long double;
 // cout << fixed << setprecision(10);
-const ll INF = 1e18;
+// const ll INF = 1e18;
 const ld PI = acos(-1);
 const ll MOD = 998244353;
+// using mint = atcoder::modint998244353;
 // const ll MOD = 1000000007;
+// using mint = atcoder::modint1000000007;
 
 /* 省略 */
 #define pb push_back
@@ -106,7 +108,18 @@ template <typename T> ll bisect_right(vector<T> &X, ll v){ return upper_bound(X.
 #define fore(...) OVERLOAD_FORE(__VA_ARGS__, FORE2, FORE1)(__VA_ARGS__)
 
 /* コンテナ */
+using vl = vector<ll>;
+using vvl = vector<vector<ll>>;
+using vvvl = vector<vector<vector<ll>>>;
+template <typename T>
+using uset = unordered_set<T>;
+template <typename T>
+using mset = multiset<T>;
 #define discard(s, x) {auto itr_ = s.find((x)); if (itr_ != s.end()) s.erase(itr_); }
+template <typename T, typename U>
+using mmap = multimap<T, U>;
+template <typename T, typename U>
+using umap = unordered_map<T, U>;
 template <class T>
 using pq = priority_queue<T>;  // 大きい順に取り出す
 template <class T>
@@ -141,156 +154,6 @@ template<class... Args> struct std::hash<std::tuple<Args...>>{
     return HashTupleCore<tuple_size<tuple<Args...>>::value>()(keyval);
   }
 };
-
-// modint
-// https://github.com/drken1215/algorithm/blob/master/MathNumberTheory/modint.cpp
-template<int MOD> struct Fp {
-  // inner value
-  long long val;
-  
-  // constructor
-  constexpr Fp() : val(0) { }
-  constexpr Fp(long long v) : val(v % MOD) {
-    if (val < 0) val += MOD;
-  }
-  
-  // getter
-  constexpr long long get() const {
-    return val;
-  }
-  constexpr int get_mod() const {
-    return MOD;
-  }
-  
-  // comparison operators
-  constexpr bool operator == (const Fp &r) const {
-    return this->val == r.val;
-  }
-  constexpr bool operator != (const Fp &r) const {
-    return this->val != r.val;
-  }
-  
-  // arithmetic operators
-  constexpr Fp& operator += (const Fp &r) {
-    val += r.val;
-    if (val >= MOD) val -= MOD;
-    return *this;
-  }
-  constexpr Fp& operator -= (const Fp &r) {
-    val -= r.val;
-    if (val < 0) val += MOD;
-    return *this;
-  }
-  constexpr Fp& operator *= (const Fp &r) {
-    val = val * r.val % MOD;
-    return *this;
-  }
-  constexpr Fp& operator /= (const Fp &r) {
-    long long a = r.val, b = MOD, u = 1, v = 0;
-    while (b) {
-      long long t = a / b;
-      a -= t * b, swap(a, b);
-      u -= t * v, swap(u, v);
-    }
-    val = val * u % MOD;
-    if (val < 0) val += MOD;
-    return *this;
-  }
-  constexpr Fp operator + () const { return Fp(*this); }
-  constexpr Fp operator - () const { return Fp(0) - Fp(*this); }
-  constexpr Fp operator + (const Fp &r) const { return Fp(*this) += r; }
-  constexpr Fp operator - (const Fp &r) const { return Fp(*this) -= r; }
-  constexpr Fp operator * (const Fp &r) const { return Fp(*this) *= r; }
-  constexpr Fp operator / (const Fp &r) const { return Fp(*this) /= r; }
-  
-  // other operators
-  constexpr Fp& operator ++ () {
-    ++val;
-    if (val >= MOD) val -= MOD;
-    return *this;
-  }
-  constexpr Fp& operator -- () {
-    if (val == 0) val += MOD;
-    --val;
-    return *this;
-  }
-  constexpr Fp operator ++ (int) {
-    Fp res = *this;
-    ++*this;
-    return res;
-  }
-  constexpr Fp operator -- (int) {
-    Fp res = *this;
-    --*this;
-    return res;
-  }
-  friend constexpr istream& operator >> (istream &is, Fp<MOD> &x) {
-    is >> x.val;
-    x.val %= MOD;
-    if (x.val < 0) x.val += MOD;
-    return is;
-  }
-  friend constexpr ostream& operator << (ostream &os, const Fp<MOD> &x) {
-    return os << x.val;
-  }
-  
-  // other functions
-  constexpr Fp pow(long long n) const {
-    Fp res(1), mul(*this);
-    while (n > 0) {
-      if (n & 1) res *= mul;
-      mul *= mul;
-      n >>= 1;
-    }
-    return res;
-  }
-  constexpr Fp inv() const {
-    Fp res(1), div(*this);
-    return res / div;
-  }
-  friend constexpr Fp<MOD> pow(const Fp<MOD> &r, long long n) {
-    return r.pow(n);
-  }
-  friend constexpr Fp<MOD> inv(const Fp<MOD> &r) {
-    return r.inv();
-  }
-};
-
-// Binomial coefficient
-template<class mint> struct BiCoef {
-  vector<mint> fact_, inv_, finv_;
-  constexpr BiCoef() {}
-  constexpr BiCoef(int n) : fact_(n, 1), inv_(n, 1), finv_(n, 1) {
-    init(n);
-  }
-  constexpr void init(int n) {
-    fact_.assign(n, 1), inv_.assign(n, 1), finv_.assign(n, 1);
-    int MOD = fact_[0].get_mod();
-    for(int i = 2; i < n; i++){
-      fact_[i] = fact_[i-1] * i;
-      inv_[i] = -inv_[MOD%i] * (MOD/i);
-      finv_[i] = finv_[i-1] * inv_[i];
-    }
-  }
-  constexpr mint com(int n, int k) const {
-    if (n < k || n < 0 || k < 0) return 0;
-    return fact_[n] * finv_[k] * finv_[n-k];
-  }
-  constexpr mint fact(int n) const {
-    if (n < 0) return 0;
-    return fact_[n];
-  }
-  constexpr mint inv(int n) const {
-    if (n < 0) return 0;
-    return inv_[n];
-  }
-  constexpr mint finv(int n) const {
-    if (n < 0) return 0;
-    return finv_[n];
-  }
-};
-
-using mint = Fp<MOD>;
 
 /* input */
 inline void scan(){}
@@ -351,6 +214,10 @@ __int128 parse(string &s) {
       ret = 10 * ret + s[i] - '0';
   return ret;
 }
+// mint
+// ostream& operator<< (ostream& os,const mint& x){
+//   return os << x.val();
+// }
 void print() {
   cout << endl;
 }
@@ -399,61 +266,143 @@ lambda(G&&) -> lambda<std::decay_t<G>>;
 #  define debug(...) ;
 #endif
 
+struct UnionFind {
+  // core member
+  vector<long long> par;
 
+  // constructor
+  UnionFind() { }
+  UnionFind(long long n) : par(n, -1) { }
+  void init(long long n) { par.assign(n, -1); }
+  
+  // core methods
+  long long root(long long x) {
+    if (par[x] < 0) return x;
+    else return par[x] = root(par[x]);
+  }
+  
+  bool same(long long x, long long y) {
+    return root(x) == root(y);
+  }
+  
+  bool merge(long long x, long long y) {
+    x = root(x), y = root(y);
+    if (x == y) return false;
+    if (par[x] > par[y]) swap(x, y); // merge technique
+    par[x] += par[y];
+    par[y] = x;
+    return true;
+  }
+  
+  long long size(long long x) {
+    return -par[root(x)];
+  }
+
+  map<long long, vector<long long>> groups(){
+    map<long long, vector<long long>> groups;
+    for (long long i = 0; i < (long long)par.size(); ++i) {
+      long long r = root(i);
+      groups[r].push_back(i);
+    }
+    return groups;
+  }
+  
+  // debug
+  friend ostream& operator << (ostream &s, UnionFind uf) {
+    map<long long, vector<long long>> groups;
+    for (long long i = 0; i < (long long)uf.par.size(); ++i) {
+      long long r = uf.root(i);
+      groups[r].push_back(i);
+    }
+    for (const auto &it : groups) {
+      s << "group: ";
+      for (auto v : it.second) s << v << " ";
+      s << endl;
+    }
+    return s;
+  }
+};
 
 int main(){
   LL(N, M);
   STR(S, T);
 
-  queue<ll> q;
-  vector<bool> seen(N, false);
+  string RT = T;
+  reverse(RT);
+
   rep(i, N - M + 1){
     if(S.substr(i, M) == T){
-      seen[i] = true;
-      q.push(i);
       rep(j, i, i + M){
         S[j] = '#';
       }
     }
   }
 
-  while (len(q)){
-    ll v = q.front();
-    q.pop();
-
-    rep(i, v - M - 1, v + M){
-      if(i < 0 or N <= i){
-        continue;
-      }
-      bool f = true;
-      ll c = 0;
-      vector<ll> buf;
-      rep(j, i, i + M){
-        if(S[j] != '#'){
-          if(S[j] != T[c]){
-            f = false;
-            break;
-          }else{
-            buf.push_back(j);
-          }
-        }
-        c++;
-      }
-      if(f == true and seen[i] == false){
-        seen[i] = true;
-        fore(idx, buf){
-          S[idx] = '#';
-        }
-        q.push(i);
-      }
-    }
-  }
-
   debug(S)
 
-  if(count(S, '#') == N){
-    print("Yes");
-  }else{
-    print("No");
+  rep(i, N){
+    if(i >= N){
+      break;
+    }
+    if(S[i] != '#'){
+      string test = "";
+      ll j = i;
+      while(j < N){
+        if(S[j] == '#'){
+          break;
+        }
+        test += S[j];
+        j++;
+      }
+
+      if(len(test) < len(T)){
+        if(index(T, test) == -1){
+          print("No");
+          return 0;
+        }else{
+          ;
+        }
+      }else{
+        bool f1 = true;
+        ll idx = 0;
+        rep(j, len(test)){
+          if(idx == 0 and T[idx] != test[j]){
+            f1 = false;
+            break;
+          }
+          if(T[idx] == test[j]){
+            idx++;
+          }else{
+            idx = 0;
+            j--;
+          }
+        }
+
+        bool f2 = true;
+        idx = 0;
+        reverse(test);
+        rep(j, len(test)){
+          if(idx == 0 and RT[idx] != test[j]){
+            f2 = false;
+            break;
+          }
+          if(RT[idx] == test[j]){
+            idx++;
+          }else{
+            idx = 0;
+            j--;
+          }
+        }
+
+        if(f1 == false and f2 == false){
+          print("No");
+          return 0;
+        }
+      }
+      i += len(test);
+    }  
   }
+
+  print("Yes");
+
 }

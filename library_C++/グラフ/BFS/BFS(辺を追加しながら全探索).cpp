@@ -1,5 +1,5 @@
 // 探索する範囲 uset か vector で管理
-vl d(N, -1);
+vector<ll> d(N, -1);
 
 queue<ll> q;
 q.push(0);

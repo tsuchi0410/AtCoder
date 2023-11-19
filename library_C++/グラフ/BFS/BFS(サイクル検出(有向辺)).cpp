@@ -7,15 +7,15 @@ https://algo-method.com/tasks/971
 
 int main(){
   LL(N, M);
-  vvl G(N);
+  vector<vector<ll>> G(N);
   rep(i, M){
     LL(v, u);
-    G[u].pb(v);
+    G[u].push_back(v);
   }
 
   vl order; // トポロジカルソートの結果を格納
 
-  vl ind(N); // indegree : 入次数
+  vector<ll> ind(N); // indegree : 入次数
   rep(v, N){
     fore(u, G[v]){
       ind[u]++;

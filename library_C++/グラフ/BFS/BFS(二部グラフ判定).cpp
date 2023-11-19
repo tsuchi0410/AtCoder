@@ -11,7 +11,7 @@ vl color を追加する（白 = 0, 黒 = 1, 未探索 = -1）
 
 int main(){
   LL(N, M);
-  vvl G(N);
+  vector<vector<ll>> G(N);
   rep(i, M){
     LL(u, v);
     G[u].push_back(v);
@@ -19,7 +19,7 @@ int main(){
   }
     
   bool isnibu = true;
-  vl color(N, -1);  // color 0, 1, -1
+  vector<ld> color(N, -1);  // color 0, 1, -1
   rep(v, N){
     // 訪問済みであればスキップ
     if(color[v] != -1){

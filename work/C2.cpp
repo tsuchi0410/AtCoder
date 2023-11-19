@@ -106,7 +106,18 @@ template <typename T> ll bisect_right(vector<T> &X, ll v){ return upper_bound(X.
 #define fore(...) OVERLOAD_FORE(__VA_ARGS__, FORE2, FORE1)(__VA_ARGS__)
 
 /* コンテナ */
+using vl = vector<ll>;
+using vvl = vector<vector<ll>>;
+using vvvl = vector<vector<vector<ll>>>;
+template <typename T>
+using uset = unordered_set<T>;
+template <typename T>
+using mset = multiset<T>;
 #define discard(s, x) {auto itr_ = s.find((x)); if (itr_ != s.end()) s.erase(itr_); }
+template <typename T, typename U>
+using mmap = multimap<T, U>;
+template <typename T, typename U>
+using umap = unordered_map<T, U>;
 template <class T>
 using pq = priority_queue<T>;  // 大きい順に取り出す
 template <class T>
@@ -399,61 +410,44 @@ lambda(G&&) -> lambda<std::decay_t<G>>;
 #  define debug(...) ;
 #endif
 
+vector<pair<char, ll>> encode(const string& str) {
+  ll n = (ll)str.size();
+  vector<pair<char, ll>> ret;
+  for (ll l = 0; l < n;) {
+    ll r = l + 1;
+    for (; r < n && str[l] == str[r]; r++) {};
+    ret.push_back({str[l], r - l});
+    l = r;
+  }
+  return ret;
+}
 
+string decode(const vector<pair<char, ll>>& code) {
+  string ret = "";
+  for (auto p : code) {
+    for (ll i = 0; i < p.second; i++) {
+      ret.push_back(p.first);
+    }
+  }
+  return ret;
+}
 
 int main(){
-  LL(N, M);
-  STR(S, T);
+  LL(N);
+  STR(S);
 
-  queue<ll> q;
-  vector<bool> seen(N, false);
-  rep(i, N - M + 1){
-    if(S.substr(i, M) == T){
-      seen[i] = true;
-      q.push(i);
-      rep(j, i, i + M){
-        S[j] = '#';
-      }
-    }
+  vector<pair<char, ll>> v = encode(S);
+  unordered_map<char, ll> mp;
+  fore(i, v){
+    char c = i.first;
+    ll cnt = i.second;
+    chmax(mp[c], cnt);
   }
 
-  while (len(q)){
-    ll v = q.front();
-    q.pop();
-
-    rep(i, v - M - 1, v + M){
-      if(i < 0 or N <= i){
-        continue;
-      }
-      bool f = true;
-      ll c = 0;
-      vector<ll> buf;
-      rep(j, i, i + M){
-        if(S[j] != '#'){
-          if(S[j] != T[c]){
-            f = false;
-            break;
-          }else{
-            buf.push_back(j);
-          }
-        }
-        c++;
-      }
-      if(f == true and seen[i] == false){
-        seen[i] = true;
-        fore(idx, buf){
-          S[idx] = '#';
-        }
-        q.push(i);
-      }
-    }
+  ll ans = 0;
+  fore(key, val, mp){
+    ans += val;
   }
 
-  debug(S)
-
-  if(count(S, '#') == N){
-    print("Yes");
-  }else{
-    print("No");
-  }
+  print(ans);
 }

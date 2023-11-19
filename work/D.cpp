@@ -7,10 +7,12 @@ using ull = unsigned long long;
 using i128 = __int128;
 using ld = long double;
 // cout << fixed << setprecision(10);
-const ll INF = 1e18;
+// const ll INF = 1e18;
 const ld PI = acos(-1);
 const ll MOD = 998244353;
+// using mint = atcoder::modint998244353;
 // const ll MOD = 1000000007;
+// using mint = atcoder::modint1000000007;
 
 /* 省略 */
 #define pb push_back
@@ -106,7 +108,18 @@ template <typename T> ll bisect_right(vector<T> &X, ll v){ return upper_bound(X.
 #define fore(...) OVERLOAD_FORE(__VA_ARGS__, FORE2, FORE1)(__VA_ARGS__)
 
 /* コンテナ */
+using vl = vector<ll>;
+using vvl = vector<vector<ll>>;
+using vvvl = vector<vector<vector<ll>>>;
+template <typename T>
+using uset = unordered_set<T>;
+template <typename T>
+using mset = multiset<T>;
 #define discard(s, x) {auto itr_ = s.find((x)); if (itr_ != s.end()) s.erase(itr_); }
+template <typename T, typename U>
+using mmap = multimap<T, U>;
+template <typename T, typename U>
+using umap = unordered_map<T, U>;
 template <class T>
 using pq = priority_queue<T>;  // 大きい順に取り出す
 template <class T>
@@ -141,156 +154,6 @@ template<class... Args> struct std::hash<std::tuple<Args...>>{
     return HashTupleCore<tuple_size<tuple<Args...>>::value>()(keyval);
   }
 };
-
-// modint
-// https://github.com/drken1215/algorithm/blob/master/MathNumberTheory/modint.cpp
-template<int MOD> struct Fp {
-  // inner value
-  long long val;
-  
-  // constructor
-  constexpr Fp() : val(0) { }
-  constexpr Fp(long long v) : val(v % MOD) {
-    if (val < 0) val += MOD;
-  }
-  
-  // getter
-  constexpr long long get() const {
-    return val;
-  }
-  constexpr int get_mod() const {
-    return MOD;
-  }
-  
-  // comparison operators
-  constexpr bool operator == (const Fp &r) const {
-    return this->val == r.val;
-  }
-  constexpr bool operator != (const Fp &r) const {
-    return this->val != r.val;
-  }
-  
-  // arithmetic operators
-  constexpr Fp& operator += (const Fp &r) {
-    val += r.val;
-    if (val >= MOD) val -= MOD;
-    return *this;
-  }
-  constexpr Fp& operator -= (const Fp &r) {
-    val -= r.val;
-    if (val < 0) val += MOD;
-    return *this;
-  }
-  constexpr Fp& operator *= (const Fp &r) {
-    val = val * r.val % MOD;
-    return *this;
-  }
-  constexpr Fp& operator /= (const Fp &r) {
-    long long a = r.val, b = MOD, u = 1, v = 0;
-    while (b) {
-      long long t = a / b;
-      a -= t * b, swap(a, b);
-      u -= t * v, swap(u, v);
-    }
-    val = val * u % MOD;
-    if (val < 0) val += MOD;
-    return *this;
-  }
-  constexpr Fp operator + () const { return Fp(*this); }
-  constexpr Fp operator - () const { return Fp(0) - Fp(*this); }
-  constexpr Fp operator + (const Fp &r) const { return Fp(*this) += r; }
-  constexpr Fp operator - (const Fp &r) const { return Fp(*this) -= r; }
-  constexpr Fp operator * (const Fp &r) const { return Fp(*this) *= r; }
-  constexpr Fp operator / (const Fp &r) const { return Fp(*this) /= r; }
-  
-  // other operators
-  constexpr Fp& operator ++ () {
-    ++val;
-    if (val >= MOD) val -= MOD;
-    return *this;
-  }
-  constexpr Fp& operator -- () {
-    if (val == 0) val += MOD;
-    --val;
-    return *this;
-  }
-  constexpr Fp operator ++ (int) {
-    Fp res = *this;
-    ++*this;
-    return res;
-  }
-  constexpr Fp operator -- (int) {
-    Fp res = *this;
-    --*this;
-    return res;
-  }
-  friend constexpr istream& operator >> (istream &is, Fp<MOD> &x) {
-    is >> x.val;
-    x.val %= MOD;
-    if (x.val < 0) x.val += MOD;
-    return is;
-  }
-  friend constexpr ostream& operator << (ostream &os, const Fp<MOD> &x) {
-    return os << x.val;
-  }
-  
-  // other functions
-  constexpr Fp pow(long long n) const {
-    Fp res(1), mul(*this);
-    while (n > 0) {
-      if (n & 1) res *= mul;
-      mul *= mul;
-      n >>= 1;
-    }
-    return res;
-  }
-  constexpr Fp inv() const {
-    Fp res(1), div(*this);
-    return res / div;
-  }
-  friend constexpr Fp<MOD> pow(const Fp<MOD> &r, long long n) {
-    return r.pow(n);
-  }
-  friend constexpr Fp<MOD> inv(const Fp<MOD> &r) {
-    return r.inv();
-  }
-};
-
-// Binomial coefficient
-template<class mint> struct BiCoef {
-  vector<mint> fact_, inv_, finv_;
-  constexpr BiCoef() {}
-  constexpr BiCoef(int n) : fact_(n, 1), inv_(n, 1), finv_(n, 1) {
-    init(n);
-  }
-  constexpr void init(int n) {
-    fact_.assign(n, 1), inv_.assign(n, 1), finv_.assign(n, 1);
-    int MOD = fact_[0].get_mod();
-    for(int i = 2; i < n; i++){
-      fact_[i] = fact_[i-1] * i;
-      inv_[i] = -inv_[MOD%i] * (MOD/i);
-      finv_[i] = finv_[i-1] * inv_[i];
-    }
-  }
-  constexpr mint com(int n, int k) const {
-    if (n < k || n < 0 || k < 0) return 0;
-    return fact_[n] * finv_[k] * finv_[n-k];
-  }
-  constexpr mint fact(int n) const {
-    if (n < 0) return 0;
-    return fact_[n];
-  }
-  constexpr mint inv(int n) const {
-    if (n < 0) return 0;
-    return inv_[n];
-  }
-  constexpr mint finv(int n) const {
-    if (n < 0) return 0;
-    return finv_[n];
-  }
-};
-
-using mint = Fp<MOD>;
 
 /* input */
 inline void scan(){}
@@ -351,6 +214,10 @@ __int128 parse(string &s) {
       ret = 10 * ret + s[i] - '0';
   return ret;
 }
+// mint
+// ostream& operator<< (ostream& os,const mint& x){
+//   return os << x.val();
+// }
 void print() {
   cout << endl;
 }
@@ -399,61 +266,154 @@ lambda(G&&) -> lambda<std::decay_t<G>>;
 #  define debug(...) ;
 #endif
 
+// Segment Tree
+template<class Monoid> struct SegmentTree {
+    using Func = function<Monoid(Monoid, Monoid)>;
 
+    // core member
+    int N;
+    Func OP;
+    Monoid IDENTITY;
+    
+    // inner data
+    int log, offset;
+    vector<Monoid> dat;
+
+    // constructor
+    SegmentTree() {}
+    SegmentTree(int n, const Func &op, const Monoid &identity) {
+        init(n, op, identity);
+    }
+    SegmentTree(const vector<Monoid> &v, const Func &op, const Monoid &identity) {
+        init(v, op, identity);
+    }
+    void init(int n, const Func &op, const Monoid &identity) {
+        N = n;
+        OP = op;
+        IDENTITY = identity;
+        log = 0, offset = 1;
+        while (offset < N) ++log, offset <<= 1;
+        dat.assign(offset * 2, IDENTITY);
+    }
+    void init(const vector<Monoid> &v, const Func &op, const Monoid &identity) {
+        init((int)v.size(), op, identity);
+        build(v);
+    }
+    void pull(int k) {
+        dat[k] = OP(dat[k * 2], dat[k * 2 + 1]);
+    }
+    void build(const vector<Monoid> &v) {
+        assert(N == (int)v.size());
+        for (int i = 0; i < N; ++i) dat[i + offset] = v[i];
+        for (int k = offset - 1; k > 0; --k) pull(k);
+    }
+    int size() const {
+        return N;
+    }
+    Monoid operator [] (int i) const {
+        return dat[i + offset];
+    }
+    
+    // update A[i], i is 0-indexed, O(log N)
+    void set(int i, const Monoid &v) {
+        assert(0 <= i && i < N);
+        int k = i + offset;
+        dat[k] = v;
+        while (k >>= 1) pull(k);
+    }
+    
+    // get [l, r), l and r are 0-indexed, O(log N)
+    Monoid prod(int l, int r) {
+        assert(0 <= l && l <= r && r <= N);
+        Monoid val_left = IDENTITY, val_right = IDENTITY;
+        l += offset, r += offset;
+        for (; l < r; l >>= 1, r >>= 1) {
+            if (l & 1) val_left = OP(val_left, dat[l++]);
+            if (r & 1) val_right = OP(dat[--r], val_right);
+        }
+        return OP(val_left, val_right);
+    }
+    Monoid all_prod() {
+        return dat[1];
+    }
+    
+    // get max r that f(get(l, r)) = True (0-indexed), O(log N)
+    // f(IDENTITY) need to be True
+    int max_right(const function<bool(Monoid)> f, int l = 0) {
+        if (l == N) return N;
+        l += offset;
+        Monoid sum = IDENTITY;
+        do {
+            while (l % 2 == 0) l >>= 1;
+            if (!f(OP(sum, dat[l]))) {
+                while (l < offset) {
+                    l = l * 2;
+                    if (f(OP(sum, dat[l]))) {
+                        sum = OP(sum, dat[l]);
+                        ++l;
+                    }
+                }
+                return l - offset;
+            }
+            sum = OP(sum, dat[l]);
+            ++l;
+        } while ((l & -l) != l);  // stop if l = 2^e
+        return N;
+    }
+
+    // get min l that f(get(l, r)) = True (0-indexed), O(log N)
+    // f(IDENTITY) need to be True
+    int min_left(const function<bool(Monoid)> f, int r = -1) {
+        if (r == 0) return 0;
+        if (r == -1) r = N;
+        r += offset;
+        Monoid sum = IDENTITY;
+        do {
+            --r;
+            while (r > 1 && (r % 2)) r >>= 1;
+            if (!f(OP(dat[r], sum))) {
+                while (r < offset) {
+                    r = r * 2 + 1;
+                    if (f(OP(dat[r], sum))) {
+                        sum = OP(dat[r], sum);
+                        --r;
+                    }
+                }
+                return r + 1 - offset;
+            }
+            sum = OP(dat[r], sum);
+        } while ((r & -r) != r);
+        return 0;
+    }
+    
+    // debug
+    friend ostream& operator << (ostream &s, const SegmentTree &seg) {
+        for (int i = 0; i < (int)seg.size(); ++i) {
+            s << seg[i];
+            if (i != (int)seg.size() - 1) s << " ";
+        }
+        return s;
+    }
+};
 
 int main(){
   LL(N, M);
-  STR(S, T);
+  VEC(int, A, M);
 
-  queue<ll> q;
-  vector<bool> seen(N, false);
-  rep(i, N - M + 1){
-    if(S.substr(i, M) == T){
-      seen[i] = true;
-      q.push(i);
-      rep(j, i, i + M){
-        S[j] = '#';
-      }
-    }
+  rep(i, M){
+    A[i]--;
   }
-
-  while (len(q)){
-    ll v = q.front();
-    q.pop();
-
-    rep(i, v - M - 1, v + M){
-      if(i < 0 or N <= i){
-        continue;
-      }
-      bool f = true;
-      ll c = 0;
-      vector<ll> buf;
-      rep(j, i, i + M){
-        if(S[j] != '#'){
-          if(S[j] != T[c]){
-            f = false;
-            break;
-          }else{
-            buf.push_back(j);
-          }
-        }
-        c++;
-      }
-      if(f == true and seen[i] == false){
-        seen[i] = true;
-        fore(idx, buf){
-          S[idx] = '#';
-        }
-        q.push(i);
-      }
-    }
-  }
-
-  debug(S)
-
-  if(count(S, '#') == N){
-    print("Yes");
-  }else{
-    print("No");
+  
+  const int INF = 1<<30;
+  vector<int> v(N);
+  SegmentTree<int> seg(v, [&](int a, int b){ return max(a, b); }, -INF);
+  rep(i, M){
+    ll num = seg.prod(A[i], A[i] + 1);
+    seg.set(A[i], num + 1);
+    debug(seg)
+    int nmax = seg.all_prod();
+    int res = seg.max_right([&](int x) -> bool { return nmax > x; }, 0);
+    print(res + 1);
+    
   }
 }
