@@ -24,6 +24,7 @@ template<class T, class U> auto min(const map<T, U>& mp){ return *(mp.begin()); 
 template<class T> auto max(const T& a){ return *max_element(all(a)); }
 template<class T> auto max(const set<T>& s){ return *(--s.end()); }
 template<class T, class U> auto max(const map<T, U>& mp){ return *(--mp.end()); }
+#define sum(...) accumulate(all(__VA_ARGS__),0LL)
 template<class T, class U>ll count(const T& a, const U& b){ return count(all(a), b); }
 template <typename T>
 long long index(const T& ctr, const T& subctr) {
@@ -33,10 +34,6 @@ long long index(const T& ctr, const T& subctr) {
   }else{
     return distance(ctr.begin(), itr);
   }
-}
-template<typename T>
-auto sum(vector<T>& v){
-  return accumulate(v.begin(), v.end(), 0LL);
 }
 template <typename T>
 vector<T> cum(vector<T> &v){
@@ -406,30 +403,34 @@ lambda(G&&) -> lambda<std::decay_t<G>>;
 
 
 int main(){
-  LL(N);
-  vector<vector<ll>> D;
-  rep(i, N - 1){
-    VEC(ll, v, N - 1 - i);
-    D.push_back(v);
-  }
-
-  vector<ll> dp(1 << N);
-
-  rep(s, 1 << N){
-    rep(i, N - 1){
-      if((s >> i) & 1 == 1){
-        continue;
-      }else{
-        rep(j, i + 1, N){
-          if((s >> j) & 1 == 1){
-            continue;
+  STR(N);
+  LL(K);
+  vector dp(len(N) + 1, vector(2, vector<ll>(K + 2))); // dp[i][flag][k] 
+  dp[0][0][0] = 1;
+  rep(i, len(N)){
+    ll num = ctoll(N[i]); // i 桁目の数字
+    rep(flag, 2){
+      rep(j, K + 1){
+        if(flag == 0){ // N からの遷移
+          if(num == 0){
+            dp[i + 1][0][j] += dp[i][0][j];
           }else{
-            ll nxt = s | 1 << i | 1 << j;
-            chmax(dp[nxt], dp[s] + D[i][j - i - 1]);
+            rep(k, num + 1){
+              if(k == 0){
+                dp[i + 1][1][j] += dp[i][0][j];
+              }else if(k == num){
+                dp[i + 1][0][j + 1] += dp[i][0][j];
+              }else{
+                dp[i + 1][1][j + 1] += dp[i][0][j];
+              }
+            }
           }
-        } 
+        }else{ // N 未満からの遷移
+          dp[i + 1][1][j] += dp[i][1][j];
+          dp[i + 1][1][j + 1] += dp[i][1][j] * 9;
+        }
       }
     }
   }
-  print(dp[(1 << N) - 1]);
+  print(dp[len(N)][0][K] + dp[len(N)][1][K]);
 }
