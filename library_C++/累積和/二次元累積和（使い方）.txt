@@ -1,0 +1,26 @@
+二次元累積和の構造体
+宣言 -> add -> build -> query(左上 i, 左上 j, 右下 i, 右下 j)
+
+// 宣言
+CumulativeSum2D<ll> r2d(H, W);
+
+// 追加
+r2d.add(i, j, x)
+
+// 半開区間の追加
+// (i, j) = 左上, (i2, j2) = 右下, x = 加える値
+// 半開区間なので、例えば (i, j) = (1, 1), (i2, j2) = (3, 3) というクエリなら
+// i--; j--;
+r2d.imos(i, j, i2, j2, x);
+
+// 構築
+r2d.build();
+
+// 値の取得
+r2d.imos_get(i, j);
+
+// 半開区間
+r2d.query(i, j, i2, j2);
+
+// print
+print(r2d);

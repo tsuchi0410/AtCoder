@@ -10,11 +10,8 @@ https://algo-logic.info/tree-dp/
 はまやん
 https://blog.hamayanhamayan.com/entry/2016/11/14/223727
 
-・セグメントツリー
-・平面走査 
-
 ・むずい数学
 https://atcoder.jp/contests/abc254/tasks/abc254_d
 
 ACL 整備（最大流など）
-std::merge (set)
+しゃくとり法のライブラリを整理

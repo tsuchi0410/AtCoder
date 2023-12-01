@@ -10,31 +10,31 @@
 """
 
 int main(){
-    LL(N, M);
-    vvl E;
-    rep(i, M){
-        LL(u, v, w);
-        u--;
-        v--;
-        E.pb({w, u, v});
+  LL(N, M);
+  vector<vector<ll>> E;
+  rep(i, M){
+    LL(u, v, w);
+    u--;
+    v--;
+    E.push_back({w, u, v});
+  }
+
+  sort(E.begin(), E.end());
+  
+  UnionFind uf(N);
+  ll ans = 0;
+  rep(i, M){
+    ll w = E[i][0];
+    ll u = E[i][1];
+    ll v = E[i][2];
+
+    if(uf.same(u, v)){
+        continue;
     }
 
-    sort(E.begin(), E.end());
-    
-    dsu uf(N);
-    ll ans = 0;
-    rep(i, M){
-        ll w = E[i][0];
-        ll u = E[i][1];
-        ll v = E[i][2];
+    uf.merge(u, v);
+    ans += w;
+  }
 
-        if(uf.same(u, v)){
-            continue;
-        }
-
-        uf.merge(u, v);
-        ans += w;
-    }
-
-    print(ans);
+  print(ans);
 }

@@ -1,63 +1,48 @@
-/*
-二次元累積和の構造体
-宣言 -> add -> build -> query(左上 i, 左上 j, 右下 i, 右下 j)
+template <class T>
+struct CumulativeSum2D {
+  vector<vector<T> > data;
 
-// 宣言
-r2d<ll> S(H, W);
+  CumulativeSum2D(int H, int W) : data(H + 3, vector<T>(W + 3, 0)) {}
 
-// 追加
-S.add(i, j, x)
+  void add(int i, int j, T z) {
+    ++i, ++j;
+    if (i >= (int)data.size() || j >= (int)data[0].size()) return;
+    data[i][j] += z;
+  }
 
-// 構築
-S.build();
+  // 半開
+  void imos(int i1, int j1, int i2, int j2, T z = 1) {
+    add(i1, j1, z);
+    add(i1, j2, -z);
+    add(i2, j1, -z);
+    add(i2, j2, z);
+  }
 
-// クエリ
-S.query(i, j, i + K, j + K);
-
-// print
-S.print();
-
-*/
-
-
-
-
-template<class T>
-struct r2d{
-    vector<vector<T>> v;
-    r2d(int H, int W) : v(H + 1, vector<T>(W + 1, 0)) {}
-
-    void add(int x, int y, T z){
-        ++x, ++y;
-        if(x >= v.size() || y >= v[0].size()){
-            return;
-        }
-        v[x][y] += z;
+  void build() {
+    for (int i = 1; i < (int)data.size(); i++) {
+      for (int j = 1; j < (int)data[i].size(); j++) {
+        data[i][j] += data[i][j - 1] + data[i - 1][j] - data[i - 1][j - 1];
+      }
     }
+  }
 
-    void build() {
-        for(int i = 1; i < v.size(); i++) {
-            for(int j = 1; j < v[i].size(); j++) {
-                v[i][j] += v[i][j - 1] + v[i - 1][j] - v[i - 1][j - 1];
-            }
-        }
-    }
+  // imos (i,j) を get
+  T imos_get(int i, int j) { return data[i + 1][j + 1]; }
 
-    T query(int si, int sj, int gi, int gj) const {
-        return (v[gi][gj] - v[gi][sj] - v[si][gj] + v[si][sj]);
-    }
+  // 半開
+  T query(int i1, int j1, int i2, int j2) {
+    return (data[i2][j2] - data[i1][j2] - data[i2][j1] + data[i1][j1]);
+  }
 
-    void print(){
-        for(int i = 0; i < v.size(); i++) {
-            cout << "[";
-            for(int j = 0; j < v[i].size(); j++) {
-                if(j == v[i].size() - 1){
-                    cout << v[i][j];
-                }else{
-                    cout << v[i][j] << ", ";
-                }
-            }
-            cout << "]" << endl;
-        }
+  // debug
+  friend ostream& operator<<(ostream& os, const CumulativeSum2D<T>& cumsum) {
+    for (int i = 1; i <= (int)cumsum.data.size() - 3; i++) {
+      for (int j = 1; j <= (int)cumsum.data[i].size() - 3; j++) {
+        os << cumsum.data[i][j];
+        if(j != (int)cumsum.data[i].size() - 3) os << " ";
+      }
+      if(i != (int)cumsum.data.size() - 3) os << endl;
     }
+    return os;
+  }
 };

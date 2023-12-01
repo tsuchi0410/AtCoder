@@ -406,59 +406,68 @@ lambda(G&&) -> lambda<std::decay_t<G>>;
 
 
 int main(){
-  LL(N);
-  STR(S);
-  unordered_map<char, vector<ll>> mp;
-  rep(i, N){
-    if(S[i] == 'R'){
-      mp['R'].push_back(i);
-    }else if(S[i] == 'G'){
-      mp['G'].push_back(i);
+  LL(N, M);
+  vector<vector<vector<ll>>> G(N);
+  vector<vector<ll>> E;
+  rep(_, M){
+    LL(u, v, w);
+    u--;
+    v--;
+    G[u].push_back({v, w});
+    G[v].push_back({u, w});
+    E.push_back({u, v});
+  }
+  
+  vector<ll> dist(N, INF);
+  dist[0] = 0;
+  vector<bool> seen(N, false);
+
+  // {cost, v}
+  pqg<vector<ll>> q;
+  q.push({0, 0});
+  vector<ll> rec(N);
+  while(len(q)) {
+    ll cost_v = q.top()[0];
+    ll v = q.top()[1];
+    q.pop();
+
+    if(seen[v]) continue;
+
+    seen[v] = true;
+    fore(i, G[v]){
+      ll nv = i[0];
+      ll cost_nv = i[1];
+      if(dist[nv] > cost_v + cost_nv){
+        dist[nv] = cost_v + cost_nv;
+        rec[nv] = v;
+        q.push({dist[nv], nv});
+      }
+    }
+  }
+
+  debug(rec)
+
+  set<vector<ll>> s;
+  rep(v, 1, N){
+    ll u = rec[v];
+    if(v < u){
+      s.insert({v, u});
     }else{
-      mp['B'].push_back(i);
+      s.insert({u, v});
+    }
+    
+  }
+
+  debug(s)
+
+  rep(i, M){
+    ll u = E[i][0];
+    ll v = E[i][1];
+    if(s.contains({u, v})){
+      cout << i + 1 << " ";
     }
   }
-  debug(mp)
-  // 0, 1, 2 ,,,,, 5 ,,,,3, 6, 7
-  ll ans = 0;
-  rep(i, N){
-    if(S[i] == 'R'){
-      ll cntG = bisect_left(mp['G'], i);
-      ll cntB = len(mp['B']) - bisect_left(mp['B'], i);
-      ans += cntG * cntB;
-      cntB = bisect_left(mp['B'], i);
-      cntG = len(mp['G']) - bisect_left(mp['G'], i);
-      ans += cntG * cntB;
-    }else if(S[i] == 'G'){
-      ll cntR = bisect_left(mp['R'], i);
-      ll cntB = len(mp['B']) - bisect_left(mp['B'], i);
-      ans += cntR * cntB;
-      cntB = bisect_left(mp['B'], i);
-      cntR = len(mp['R']) - bisect_left(mp['R'], i);
-      ans += cntR * cntB;
-    }else if(S[i] == 'B'){
-      ll cntR = bisect_left(mp['R'], i);
-      ll cntG = len(mp['G']) - bisect_left(mp['G'], i);
-      ans += cntR * cntG;
-      cntG = bisect_left(mp['G'], i);
-      cntR = len(mp['R']) - bisect_left(mp['R'], i);
-      ans += cntR * cntG;
-    }
-  }
-  debug(ans)
-  rep(i, 1, N){
-    rep(j, N){
-      if(N <= j + 2 * i){
-        break;
-      }
-      unordered_set<char> st;
-      st.insert(S[j]);
-      st.insert(S[j + i]);
-      st.insert(S[j + 2 * i]);
-      if(len(st) == 3){
-        ans--;
-      }
-    }
-  }
-  print(ans);
+
+  cout << endl;
+
 }

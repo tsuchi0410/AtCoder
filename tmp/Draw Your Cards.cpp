@@ -406,59 +406,35 @@ lambda(G&&) -> lambda<std::decay_t<G>>;
 
 
 int main(){
-  LL(N);
-  STR(S);
-  unordered_map<char, vector<ll>> mp;
+  LL(N, K);
+  VEC(ll, P, N);
+  set<ll> s;
+  unordered_map<ll, vector<ll>> mp;
+  vector<ll> idx(N + 1);
+  vector<ll> ans(N + 1);
   rep(i, N){
-    if(S[i] == 'R'){
-      mp['R'].push_back(i);
-    }else if(S[i] == 'G'){
-      mp['G'].push_back(i);
+    ll x = *(s.lower_bound(P[i]));
+    if(x == 0 or x == P[i]){
+      mp[P[i]].push_back(P[i]);
+      idx[P[i]] = P[i];
+      if(len(mp[P[i]]) == K){
+        fore(v, mp[P[i]]){
+          ans[v] = i + 1;
+          s.erase(v);
+        }
+      }
     }else{
-      mp['B'].push_back(i);
+      idx[P[i]] = idx[x];
+      mp[idx[P[i]]].push_back(P[i]);
+      if(len(mp[idx[P[i]]]) == K){
+        fore(v, mp[idx[P[i]]]){
+          ans[v] = i + 1;
+          s.erase(v);
+        }
+      }
     }
   }
+  debug(s)
   debug(mp)
-  // 0, 1, 2 ,,,,, 5 ,,,,3, 6, 7
-  ll ans = 0;
-  rep(i, N){
-    if(S[i] == 'R'){
-      ll cntG = bisect_left(mp['G'], i);
-      ll cntB = len(mp['B']) - bisect_left(mp['B'], i);
-      ans += cntG * cntB;
-      cntB = bisect_left(mp['B'], i);
-      cntG = len(mp['G']) - bisect_left(mp['G'], i);
-      ans += cntG * cntB;
-    }else if(S[i] == 'G'){
-      ll cntR = bisect_left(mp['R'], i);
-      ll cntB = len(mp['B']) - bisect_left(mp['B'], i);
-      ans += cntR * cntB;
-      cntB = bisect_left(mp['B'], i);
-      cntR = len(mp['R']) - bisect_left(mp['R'], i);
-      ans += cntR * cntB;
-    }else if(S[i] == 'B'){
-      ll cntR = bisect_left(mp['R'], i);
-      ll cntG = len(mp['G']) - bisect_left(mp['G'], i);
-      ans += cntR * cntG;
-      cntG = bisect_left(mp['G'], i);
-      cntR = len(mp['R']) - bisect_left(mp['R'], i);
-      ans += cntR * cntG;
-    }
-  }
   debug(ans)
-  rep(i, 1, N){
-    rep(j, N){
-      if(N <= j + 2 * i){
-        break;
-      }
-      unordered_set<char> st;
-      st.insert(S[j]);
-      st.insert(S[j + i]);
-      st.insert(S[j + 2 * i]);
-      if(len(st) == 3){
-        ans--;
-      }
-    }
-  }
-  print(ans);
 }

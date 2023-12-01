@@ -403,62 +403,66 @@ lambda(G&&) -> lambda<std::decay_t<G>>;
 #  define debug(...) ;
 #endif
 
+template <class T>
+struct CumulativeSum2D {
+  vector<vector<T> > data;
 
+  CumulativeSum2D(int H, int W) : data(H + 3, vector<T>(W + 3, 0)) {}
+
+  void add(int i, int j, T z) {
+    ++i, ++j;
+    if (i >= (int)data.size() || j >= (int)data[0].size()) return;
+    data[i][j] += z;
+  }
+
+  // 半開
+  void imos(int i1, int j1, int i2, int j2, T z = 1) {
+    add(i1, j1, z);
+    add(i1, j2, -z);
+    add(i2, j1, -z);
+    add(i2, j2, z);
+  }
+
+  void build() {
+    for (int i = 1; i < (int)data.size(); i++) {
+      for (int j = 1; j < (int)data[i].size(); j++) {
+        data[i][j] += data[i][j - 1] + data[i - 1][j] - data[i - 1][j - 1];
+      }
+    }
+  }
+
+  // imos (i,j) を get
+  T imos_get(int i, int j) { return data[i + 1][j + 1]; }
+
+  // 半開
+  T query(int i1, int j1, int i2, int j2) {
+    return (data[i2][j2] - data[i1][j2] - data[i2][j1] + data[i1][j1]);
+  }
+
+  // debug
+  friend ostream& operator<<(ostream& os, const CumulativeSum2D<T>& cumsum) {
+    for (int i = 1; i <= (int)cumsum.data.size() - 3; i++) {
+      for (int j = 1; j <= (int)cumsum.data[i].size() - 3; j++) {
+        os << cumsum.data[i][j];
+        if(j != (int)cumsum.data[i].size() - 3) os << " ";
+      }
+      if(i != (int)cumsum.data.size() - 3) os << endl;
+    }
+    return os;
+  }
+};
 
 int main(){
-  LL(N);
-  STR(S);
-  unordered_map<char, vector<ll>> mp;
+  LL(H, W, N);
+  CumulativeSum2D<ll> r2d(H, W);
   rep(i, N){
-    if(S[i] == 'R'){
-      mp['R'].push_back(i);
-    }else if(S[i] == 'G'){
-      mp['G'].push_back(i);
-    }else{
-      mp['B'].push_back(i);
-    }
+    LL(A, B, C, D);
+    A--;
+    B--;
+    // C--;
+    // D--;
+    r2d.imos(A, B, C, D, 1);
   }
-  debug(mp)
-  // 0, 1, 2 ,,,,, 5 ,,,,3, 6, 7
-  ll ans = 0;
-  rep(i, N){
-    if(S[i] == 'R'){
-      ll cntG = bisect_left(mp['G'], i);
-      ll cntB = len(mp['B']) - bisect_left(mp['B'], i);
-      ans += cntG * cntB;
-      cntB = bisect_left(mp['B'], i);
-      cntG = len(mp['G']) - bisect_left(mp['G'], i);
-      ans += cntG * cntB;
-    }else if(S[i] == 'G'){
-      ll cntR = bisect_left(mp['R'], i);
-      ll cntB = len(mp['B']) - bisect_left(mp['B'], i);
-      ans += cntR * cntB;
-      cntB = bisect_left(mp['B'], i);
-      cntR = len(mp['R']) - bisect_left(mp['R'], i);
-      ans += cntR * cntB;
-    }else if(S[i] == 'B'){
-      ll cntR = bisect_left(mp['R'], i);
-      ll cntG = len(mp['G']) - bisect_left(mp['G'], i);
-      ans += cntR * cntG;
-      cntG = bisect_left(mp['G'], i);
-      cntR = len(mp['R']) - bisect_left(mp['R'], i);
-      ans += cntR * cntG;
-    }
-  }
-  debug(ans)
-  rep(i, 1, N){
-    rep(j, N){
-      if(N <= j + 2 * i){
-        break;
-      }
-      unordered_set<char> st;
-      st.insert(S[j]);
-      st.insert(S[j + i]);
-      st.insert(S[j + 2 * i]);
-      if(len(st) == 3){
-        ans--;
-      }
-    }
-  }
-  print(ans);
+  r2d.build();
+  print(r2d);
 }

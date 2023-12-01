@@ -403,62 +403,164 @@ lambda(G&&) -> lambda<std::decay_t<G>>;
 #  define debug(...) ;
 #endif
 
+// Segment Tree
+template<class Monoid> struct SegmentTree {
+  using Func = function<Monoid(Monoid, Monoid)>;
 
+  // core member
+  int N;
+  Func OP;
+  Monoid IDENTITY;
+  
+  // inner data
+  int log, offset;
+  vector<Monoid> dat;
+
+  // constructor
+  SegmentTree() {}
+  SegmentTree(int n, const Func &op, const Monoid &identity) {
+    init(n, op, identity);
+  }
+  SegmentTree(const vector<Monoid> &v, const Func &op, const Monoid &identity) {
+    init(v, op, identity);
+  }
+  void init(int n, const Func &op, const Monoid &identity) {
+    N = n;
+    OP = op;
+    IDENTITY = identity;
+    log = 0, offset = 1;
+    while (offset < N) ++log, offset <<= 1;
+    dat.assign(offset * 2, IDENTITY);
+  }
+  void init(const vector<Monoid> &v, const Func &op, const Monoid &identity) {
+    init((int)v.size(), op, identity);
+    build(v);
+  }
+  void pull(int k) {
+    dat[k] = OP(dat[k * 2], dat[k * 2 + 1]);
+  }
+  void build(const vector<Monoid> &v) {
+    assert(N == (int)v.size());
+    for (int i = 0; i < N; ++i) dat[i + offset] = v[i];
+    for (int k = offset - 1; k > 0; --k) pull(k);
+  }
+  int size() const {
+    return N;
+  }
+  Monoid operator [] (int i) const {
+    return dat[i + offset];
+  }
+  
+  // update A[i], i is 0-indexed, O(log N)
+  void set(int i, const Monoid &v) {
+    assert(0 <= i && i < N);
+    int k = i + offset;
+    dat[k] = v;
+    while (k >>= 1) pull(k);
+  }
+  
+  // get [l, r), l and r are 0-indexed, O(log N)
+  Monoid prod(int l, int r) {
+    assert(0 <= l && l <= r && r <= N);
+    Monoid val_left = IDENTITY, val_right = IDENTITY;
+    l += offset, r += offset;
+    for (; l < r; l >>= 1, r >>= 1) {
+      if (l & 1) val_left = OP(val_left, dat[l++]);
+      if (r & 1) val_right = OP(dat[--r], val_right);
+    }
+    return OP(val_left, val_right);
+  }
+  Monoid all_prod() {
+    return dat[1];
+  }
+  
+  // get max r that f(get(l, r)) = True (0-indexed), O(log N)
+  // f(IDENTITY) need to be True
+  int max_right(const function<bool(Monoid)> f, int l = 0) {
+    if (l == N) return N;
+    l += offset;
+    Monoid sum = IDENTITY;
+    do {
+      while (l % 2 == 0) l >>= 1;
+      if (!f(OP(sum, dat[l]))) {
+        while (l < offset) {
+          l = l * 2;
+          if (f(OP(sum, dat[l]))) {
+            sum = OP(sum, dat[l]);
+            ++l;
+          }
+        }
+        return l - offset;
+      }
+      sum = OP(sum, dat[l]);
+      ++l;
+    } while ((l & -l) != l);  // stop if l = 2^e
+    return N;
+  }
+
+  // get min l that f(get(l, r)) = True (0-indexed), O(log N)
+  // f(IDENTITY) need to be True
+  int min_left(const function<bool(Monoid)> f, int r = -1) {
+    if (r == 0) return 0;
+    if (r == -1) r = N;
+    r += offset;
+    Monoid sum = IDENTITY;
+    do {
+      --r;
+      while (r > 1 && (r % 2)) r >>= 1;
+      if (!f(OP(dat[r], sum))) {
+        while (r < offset) {
+          r = r * 2 + 1;
+          if (f(OP(dat[r], sum))) {
+            sum = OP(dat[r], sum);
+            --r;
+          }
+        }
+        return r + 1 - offset;
+      }
+      sum = OP(dat[r], sum);
+    } while ((r & -r) != r);
+    return 0;
+  }
+  
+  // debug
+  friend ostream& operator << (ostream &s, const SegmentTree &seg) {
+    for (int i = 0; i < (int)seg.size(); ++i) {
+      s << seg[i];
+      if (i != (int)seg.size() - 1) s << " ";
+    }
+    return s;
+  }
+};
 
 int main(){
-  LL(N);
-  STR(S);
-  unordered_map<char, vector<ll>> mp;
+  LL(N, Q);
+  VEC(ll, A, N);
+
+  const int iINF = 1 << 30;
+  int imax = 10;
+  // int imax = 2 * 100000 + 10;
+  vector<int> v(imax);
+  SegmentTree<int> seg(v, [&](int a, int b){ return min(a, b); }, iINF);
   rep(i, N){
-    if(S[i] == 'R'){
-      mp['R'].push_back(i);
-    }else if(S[i] == 'G'){
-      mp['G'].push_back(i);
-    }else{
-      mp['B'].push_back(i);
+    if(A[i] < imax){
+      seg.set(A[i], seg[A[i]] + 1);
     }
   }
-  debug(mp)
-  // 0, 1, 2 ,,,,, 5 ,,,,3, 6, 7
-  ll ans = 0;
-  rep(i, N){
-    if(S[i] == 'R'){
-      ll cntG = bisect_left(mp['G'], i);
-      ll cntB = len(mp['B']) - bisect_left(mp['B'], i);
-      ans += cntG * cntB;
-      cntB = bisect_left(mp['B'], i);
-      cntG = len(mp['G']) - bisect_left(mp['G'], i);
-      ans += cntG * cntB;
-    }else if(S[i] == 'G'){
-      ll cntR = bisect_left(mp['R'], i);
-      ll cntB = len(mp['B']) - bisect_left(mp['B'], i);
-      ans += cntR * cntB;
-      cntB = bisect_left(mp['B'], i);
-      cntR = len(mp['R']) - bisect_left(mp['R'], i);
-      ans += cntR * cntB;
-    }else if(S[i] == 'B'){
-      ll cntR = bisect_left(mp['R'], i);
-      ll cntG = len(mp['G']) - bisect_left(mp['G'], i);
-      ans += cntR * cntG;
-      cntG = bisect_left(mp['G'], i);
-      cntR = len(mp['R']) - bisect_left(mp['R'], i);
-      ans += cntR * cntG;
+  rep(_, Q){
+    LL(i, x);
+    i--;
+    if(A[i] < imax){
+      seg.set(A[i], seg[A[i]] - 1);
     }
-  }
-  debug(ans)
-  rep(i, 1, N){
-    rep(j, N){
-      if(N <= j + 2 * i){
-        break;
-      }
-      unordered_set<char> st;
-      st.insert(S[j]);
-      st.insert(S[j + i]);
-      st.insert(S[j + 2 * i]);
-      if(len(st) == 3){
-        ans--;
-      }
+    if(x < imax){
+      seg.set(x, seg[x] + 1);
     }
+    A[i] = x;
+
+    debug(seg)
+
+    int res = seg.max_right([&](int z) -> bool { return 1 < z; }, 0);
+    print(res);
   }
-  print(ans);
 }

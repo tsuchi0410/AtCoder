@@ -403,33 +403,36 @@ lambda(G&&) -> lambda<std::decay_t<G>>;
 #  define debug(...) ;
 #endif
 
-
+// 縦横斜め
+vector<ll> dx = {-1, 1, 0, 0, 1, 1, -1, -1};
+vector<ll> dy = {0, 0, -1, 1, 1, -1, -1, 1};
 
 int main(){
   LL(N);
-  vector<vector<ll>> D;
-  rep(i, N - 1){
-    VEC(ll, v, N - 1 - i);
-    D.push_back(v);
-  }
-
-  vector<ll> dp(1 << N);
-
-  rep(s, 1 << N){
-    rep(i, N - 1){
-      if((s >> i) & 1 == 1){
-        continue;
-      }else{
-        rep(j, i + 1, N){
-          if((s >> j) & 1 == 1){
-            continue;
-          }else{
-            ll nxt = s | 1 << i | 1 << j;
-            chmax(dp[nxt], dp[s] + D[i][j - i - 1]);
+  VEC(string, S, N);
+  string ans = "No";
+  rep(i, N){
+    rep(j, N){
+      rep(k, len(dx)){
+        ll cnt = 0;
+        if(i + dy[k] * 5 < 0 or N <= i + dy[k] * 5){
+          continue;
+        }
+        if(j + dx[k] * 5 < 0 or N <= j + dx[k] * 5){
+          continue;
+        }
+        rep(l, 6){
+          ll ny = i + dy[k] * l;
+          ll nx = j + dx[k] * l;
+          if(S[ny][nx] == '#'){
+            cnt++;
           }
-        } 
+        }
+        if(4 <= cnt){
+          ans = "Yes";
+        }
       }
     }
   }
-  print(dp[(1 << N) - 1]);
+  print(ans);
 }

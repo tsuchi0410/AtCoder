@@ -403,62 +403,66 @@ lambda(G&&) -> lambda<std::decay_t<G>>;
 #  define debug(...) ;
 #endif
 
+// setにvを追加(vがあるときの動作は未定義)
+void insert(set<pair<int,int>> &st, int v) {
+    auto t = st.lower_bound({v-1,2});
+    if (t != st.end() && t->first == v-1) t = st.erase(t);
+    else st.insert({v,1});
+    if (t != st.end() && t->first == v+1) st.erase(t);
+    else st.insert({v,2});
+}
 
+// setからvを削除(vがないときの動作は未定義)
+void erase(set<pair<int,int>> &st, int v) {
+    auto t = st.lower_bound({v,2}); t--;
+    if (t->first == v) st.erase(t);
+    else st.insert({v-1,2});
+    t = st.lower_bound({v,2});
+    if (t->first == v) st.erase(t);
+    else st.insert({v+1,1});
+}
+
+// mexを計算
+int mex(set<pair<int,int>> &st) {
+    auto t = st.lower_bound({0,-1});
+    if (t->first != 0) return 0;
+    else {
+        t++;
+        return t->first + 1;
+    }
+}
 
 int main(){
-  LL(N);
-  STR(S);
-  unordered_map<char, vector<ll>> mp;
+  LL(N, Q);
+  VEC(int, A, N);
+  
+  unordered_map<int, int> idx;
   rep(i, N){
-    if(S[i] == 'R'){
-      mp['R'].push_back(i);
-    }else if(S[i] == 'G'){
-      mp['G'].push_back(i);
-    }else{
-      mp['B'].push_back(i);
-    }
+    idx[i] = A[i];
   }
-  debug(mp)
-  // 0, 1, 2 ,,,,, 5 ,,,,3, 6, 7
-  ll ans = 0;
+
+
+  set<pair<int, int>> st;
+  unordered_map<int, int> cnt;
   rep(i, N){
-    if(S[i] == 'R'){
-      ll cntG = bisect_left(mp['G'], i);
-      ll cntB = len(mp['B']) - bisect_left(mp['B'], i);
-      ans += cntG * cntB;
-      cntB = bisect_left(mp['B'], i);
-      cntG = len(mp['G']) - bisect_left(mp['G'], i);
-      ans += cntG * cntB;
-    }else if(S[i] == 'G'){
-      ll cntR = bisect_left(mp['R'], i);
-      ll cntB = len(mp['B']) - bisect_left(mp['B'], i);
-      ans += cntR * cntB;
-      cntB = bisect_left(mp['B'], i);
-      cntR = len(mp['R']) - bisect_left(mp['R'], i);
-      ans += cntR * cntB;
-    }else if(S[i] == 'B'){
-      ll cntR = bisect_left(mp['R'], i);
-      ll cntG = len(mp['G']) - bisect_left(mp['G'], i);
-      ans += cntR * cntG;
-      cntG = bisect_left(mp['G'], i);
-      cntR = len(mp['R']) - bisect_left(mp['R'], i);
-      ans += cntR * cntG;
+    cnt[A[i]]++;
+    if(cnt[A[i]] == 1){
+      insert(st, A[i]);
     }
   }
-  debug(ans)
-  rep(i, 1, N){
-    rep(j, N){
-      if(N <= j + 2 * i){
-        break;
-      }
-      unordered_set<char> st;
-      st.insert(S[j]);
-      st.insert(S[j + i]);
-      st.insert(S[j + 2 * i]);
-      if(len(st) == 3){
-        ans--;
-      }
+  debug(st)
+  rep(_, Q){
+    LL(i, x);
+    i--;
+    cnt[idx[i]]--;
+    if(cnt[idx[i]] == 0){
+      erase(st, idx[i]);
     }
+    idx[i] = x;
+    cnt[x]++;
+    if(cnt[x] == 1){
+      insert(st, x);
+    }
+    print(mex(st));
   }
-  print(ans);
 }

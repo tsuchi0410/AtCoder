@@ -406,59 +406,40 @@ lambda(G&&) -> lambda<std::decay_t<G>>;
 
 
 int main(){
-  LL(N);
-  STR(S);
-  unordered_map<char, vector<ll>> mp;
+  LL(N, K);
+  VEC2(ll, X, ll, Y, N);
+  
+  unordered_set<vector<ll>> s;
   rep(i, N){
-    if(S[i] == 'R'){
-      mp['R'].push_back(i);
-    }else if(S[i] == 'G'){
-      mp['G'].push_back(i);
-    }else{
-      mp['B'].push_back(i);
-    }
-  }
-  debug(mp)
-  // 0, 1, 2 ,,,,, 5 ,,,,3, 6, 7
-  ll ans = 0;
-  rep(i, N){
-    if(S[i] == 'R'){
-      ll cntG = bisect_left(mp['G'], i);
-      ll cntB = len(mp['B']) - bisect_left(mp['B'], i);
-      ans += cntG * cntB;
-      cntB = bisect_left(mp['B'], i);
-      cntG = len(mp['G']) - bisect_left(mp['G'], i);
-      ans += cntG * cntB;
-    }else if(S[i] == 'G'){
-      ll cntR = bisect_left(mp['R'], i);
-      ll cntB = len(mp['B']) - bisect_left(mp['B'], i);
-      ans += cntR * cntB;
-      cntB = bisect_left(mp['B'], i);
-      cntR = len(mp['R']) - bisect_left(mp['R'], i);
-      ans += cntR * cntB;
-    }else if(S[i] == 'B'){
-      ll cntR = bisect_left(mp['R'], i);
-      ll cntG = len(mp['G']) - bisect_left(mp['G'], i);
-      ans += cntR * cntG;
-      cntG = bisect_left(mp['G'], i);
-      cntR = len(mp['R']) - bisect_left(mp['R'], i);
-      ans += cntR * cntG;
-    }
-  }
-  debug(ans)
-  rep(i, 1, N){
     rep(j, N){
-      if(N <= j + 2 * i){
-        break;
+      if(i == j){
+        continue;
       }
-      unordered_set<char> st;
-      st.insert(S[j]);
-      st.insert(S[j + i]);
-      st.insert(S[j + 2 * i]);
-      if(len(st) == 3){
-        ans--;
+      // 方向ベクトル(i_j)
+      ll dx1 = X[j] - X[i];
+      ll dy1 = Y[j] - Y[i];
+      vector<ll> list = {i, j};
+      rep(k, N){
+        if(i == k or j == k){
+          continue;
+        }
+        // 方向ベクトル(i_k)
+        ll dx2 = X[k] - X[i];
+        ll dy2 = Y[k] - Y[i];
+        if(dx1 * dy2 == dx2 * dy1){
+          list.push_back(k);
+        }
+      }
+      if(K <= len(list)){
+        sort(list);
+        s.insert(list);
       }
     }
   }
-  print(ans);
+  debug(s)
+  if(K == 1){
+    print("Infinity");
+  }else{
+    print(len(s));
+  }
 }

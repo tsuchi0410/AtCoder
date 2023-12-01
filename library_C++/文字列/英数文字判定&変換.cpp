@@ -1,3 +1,4 @@
+/*　英数文字判定　*/
 // 数文字判定
 char c = '2';
 isdigit(c);
@@ -14,6 +15,8 @@ islower(c)
 char c = 'A';
 isupper(c)
 
+
+/* 英小文字・英大文字変換 */
 // 英小文字(char) -> 英大文字(char)
 char c = 'a';
 c -= 32;
@@ -22,14 +25,6 @@ c -= 32;
 char c = 'A';
 c += 32;
 
-// 英小文字(char) -> 数値（何番目か）
-char c = 'a';
-c -= 97; // 0
-
-// 英小文字(char) -> 数値（何番目か）
-char c = 'A';
-c -= 65; // 0
-
 // 英小文字(string) -> 英大文字(string) 
 string s = "hello";
 transform(s.begin(), s.end(), s.begin(), ::toupper);
@@ -37,3 +32,21 @@ transform(s.begin(), s.end(), s.begin(), ::toupper);
 // 英大文字(string) -> 英小文字(string) 
 string s = "HELLO";
 transform(s.begin(), s.end(), s.begin(), ::tolower);
+
+
+/* 英文字・数値変換 */
+// 英小文字(char) -> 数値
+char c = 'a';
+c -= 97; // 0
+
+// 英大文字(char) -> 数値
+char c = 'A';
+c -= 65; // 0
+
+// 数値 -> 英小文字
+char c = 97; // a
+
+// 数値 -> 英大文字
+char c = 65; // A
+
+
