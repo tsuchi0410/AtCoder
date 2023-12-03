@@ -406,14 +406,36 @@ lambda(G&&) -> lambda<std::decay_t<G>>;
 
 
 int main(){
-  LL(N);
-  VEC(ll, A, N);
-  VEC(ll, B, N);
-  ll cnt = 0;
+  LL(N, X);
+  VVEC(ll, L, N, 2);
+  rsort(L, 1);
+  debug(L)
+  vector<ll> v(X + 1);
   rep(i, N){
-    if(A[i] <= B[i]){
+    ll A = L[i][0];
+    ll B = L[i][1];
+    // right
+    ll cnt = 0;
+    rep(j, A, A + B){
+      if(j > X){
+        break;
+      }
+      chmax(v[j], B - cnt);
+      cnt++;
+    }
+    // left
+    cnt = 0;
+    rrep(j, A, A - B){
+      if(j < 0){
+        break;
+      }
+      chmax(v[j], B - cnt);
       cnt++;
     }
   }
-  print(cnt);
+  vector<ll> ans;
+  rep(i, 1, len(v)){
+    ans.push_back(v[i]);
+  }
+  print(ans);
 }

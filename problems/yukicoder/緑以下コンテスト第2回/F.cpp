@@ -403,17 +403,28 @@ lambda(G&&) -> lambda<std::decay_t<G>>;
 #  define debug(...) ;
 #endif
 
-
+// max 987654321
 
 int main(){
-  LL(N);
-  VEC(ll, A, N);
-  VEC(ll, B, N);
-  ll cnt = 0;
-  rep(i, N){
-    if(A[i] <= B[i]){
-      cnt++;
+  LL(T);
+  rep(_, T){
+    LL(M);
+    string s = "";
+    rep(i, 9){
+      LL(c);
+      rep(j, c){
+        s += lltoc(i + 1);
+      }
+    }
+
+    debug(s)
+
+    ll num = stoll(s) * 1e9;
+    ll m = num % M;
+    if(m == 0){
+      print(num);
+    }else{
+       print(num + (M - m));
     }
   }
-  print(cnt);
 }

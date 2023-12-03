@@ -406,14 +406,15 @@ lambda(G&&) -> lambda<std::decay_t<G>>;
 
 
 int main(){
-  LL(N);
-  VEC(ll, A, N);
-  VEC(ll, B, N);
-  ll cnt = 0;
-  rep(i, N){
-    if(A[i] <= B[i]){
-      cnt++;
+  LL(M, D);
+  LL(y, m, d);
+  if(D == d){
+    if(M == m){
+      print(y + 1, 1, 1);
+    }else{
+      print(y, m + 1, 1);
     }
+  }else{
+    print(y, m, d + 1);
   }
-  print(cnt);
 }

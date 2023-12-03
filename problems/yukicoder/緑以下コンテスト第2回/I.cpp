@@ -403,17 +403,85 @@ lambda(G&&) -> lambda<std::decay_t<G>>;
 #  define debug(...) ;
 #endif
 
+vector<ll> bfs(ll N, ll s, vector<vector<ll>> &G){
+  vector<ll> dist(N, -1);
+  queue<ll> q;
+  dist[s] = 0;
+  q.push(s);
+  while (len(q)){
+    ll v = q.front();
+    q.pop();
 
-
-int main(){
-  LL(N);
-  VEC(ll, A, N);
-  VEC(ll, B, N);
-  ll cnt = 0;
-  rep(i, N){
-    if(A[i] <= B[i]){
-      cnt++;
+    fore(nv, G[v]){
+      if (dist[nv] != -1){
+        continue;
+      }
+      dist[nv] = dist[v] + 1;
+      q.push(nv);
     }
   }
-  print(cnt);
+  return dist;
+}
+
+int main(){
+  LL(N, M);
+  vector<vector<ll>> G(N);
+  rep(i, M){
+    LL(u, v);
+    u--;
+    v--;
+    G[u].push_back(v);
+  }
+
+  // 0 -> N - 2 -> N - 1 -> 0
+  bool f1 = true;
+  ll cnt1 = 0;
+  vector<ll> d = bfs(N, 0, G);
+  if(d[N - 2] == -1){
+    f1 = false;
+  }
+  cnt1 += d[N - 2];
+  d = bfs(N, N - 2, G);
+  if(d[N - 1] == -1){
+    f1 = false;
+  }
+  cnt1 += d[N - 1];
+  d = bfs(N, N - 1, G);
+  if(d[0] == -1){
+    f1 = false;
+  }
+  cnt1 += d[0];
+
+  bool f2 = true;
+  // 0 -> N - 1 -> N - 2 -> 0
+  ll cnt2 = 0;
+  d = bfs(N, 0, G);
+  if(d[N - 1] == -1){
+    f2 = false;
+  }
+  cnt2 += d[N - 1];
+  d = bfs(N, N - 1, G);
+  if(d[N - 2] == -1){
+    f2 = false;
+  }
+  cnt2 += d[N - 2];
+  d = bfs(N, N - 2, G);
+  if(d[0] == -1){
+    f2 = false;
+  }
+  cnt2 += d[0];
+
+  if(f1 == false){
+    cnt1 = INF;
+  }
+  if(f2 == false){
+    cnt2 = INF;
+  }
+
+  if(cnt1 == INF and cnt2 == INF){
+    print(-1);
+  }else{
+    print(min(cnt1, cnt2));
+  }
+
 }

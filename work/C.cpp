@@ -408,12 +408,17 @@ lambda(G&&) -> lambda<std::decay_t<G>>;
 int main(){
   LL(N);
   VEC(ll, A, N);
-  VEC(ll, B, N);
-  ll cnt = 0;
-  rep(i, N){
-    if(A[i] <= B[i]){
-      cnt++;
-    }
+  ll n1 = sum(A);
+  auto mp = counter(A);
+  
+  unordered_map<ll, ll> ans;
+  fore(k, v, mp){
+    n1 -= k * v;
+    ans[k] = n1;
   }
-  print(cnt);
+
+  rep(i, N){
+    cout << ans[A[i]] << " ";
+  }
+  cout << endl;
 }

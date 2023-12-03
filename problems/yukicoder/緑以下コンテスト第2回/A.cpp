@@ -407,13 +407,9 @@ lambda(G&&) -> lambda<std::decay_t<G>>;
 
 int main(){
   LL(N);
-  VEC(ll, A, N);
-  VEC(ll, B, N);
-  ll cnt = 0;
-  rep(i, N){
-    if(A[i] <= B[i]){
-      cnt++;
-    }
+  if(N < 1200){
+    print("green");
+  }else{
+    print("difficult");
   }
-  print(cnt);
 }

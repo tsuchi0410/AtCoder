@@ -406,14 +406,17 @@ lambda(G&&) -> lambda<std::decay_t<G>>;
 
 
 int main(){
-  LL(N);
-  VEC(ll, A, N);
-  VEC(ll, B, N);
-  ll cnt = 0;
-  rep(i, N){
-    if(A[i] <= B[i]){
-      cnt++;
+  LL(N, S, M, L);
+  ll ans = INF;
+  ll nmax = 100;
+  rep(i, nmax){
+    rep(j, nmax){
+      rep(k, nmax){
+        if(N <= i * 6 + j * 8 + k * 12){
+          chmin(ans, S * i + M * j + L * k);
+        }
+      }
     }
   }
-  print(cnt);
+  print(ans);
 }

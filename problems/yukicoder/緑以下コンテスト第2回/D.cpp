@@ -403,17 +403,25 @@ lambda(G&&) -> lambda<std::decay_t<G>>;
 #  define debug(...) ;
 #endif
 
-
+long long sum_of_sequences(long long a, long long n){
+  return (a + a * n) * n / 2;
+}
 
 int main(){
-  LL(N);
-  VEC(ll, A, N);
-  VEC(ll, B, N);
-  ll cnt = 0;
-  rep(i, N){
-    if(A[i] <= B[i]){
-      cnt++;
+  LL(T);
+  rep(_, T){
+    LL(N, X);
+    ll n1 = sum_of_sequences(1, N);
+    if(X < n1){
+      print(-1);
+    }else{
+      ll cnt = 0;
+      rep(i, 1, N){
+        cnt += i;
+        cout << i << " ";
+      }
+      cout << X - cnt;
+      cout << endl;
     }
   }
-  print(cnt);
 }

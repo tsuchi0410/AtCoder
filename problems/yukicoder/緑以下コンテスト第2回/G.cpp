@@ -403,17 +403,98 @@ lambda(G&&) -> lambda<std::decay_t<G>>;
 #  define debug(...) ;
 #endif
 
+struct UnionFind {
+  // core member
+  vector<long long> par;
 
+  // constructor
+  UnionFind() { }
+  UnionFind(long long n) : par(n, -1) { }
+  void init(long long n) { par.assign(n, -1); }
+  
+  // core methods
+  long long root(long long x) {
+    if (par[x] < 0) return x;
+    else return par[x] = root(par[x]);
+  }
+  
+  bool same(long long x, long long y) {
+    return root(x) == root(y);
+  }
+  
+  bool merge(long long x, long long y) {
+    x = root(x), y = root(y);
+    if (x == y) return false;
+    if (par[x] > par[y]) swap(x, y); // merge technique
+    par[x] += par[y];
+    par[y] = x;
+    return true;
+  }
+  
+  long long size(long long x) {
+    return -par[root(x)];
+  }
+
+  map<long long, vector<long long>> groups(){
+    map<long long, vector<long long>> groups;
+    for (long long i = 0; i < (long long)par.size(); ++i) {
+      long long r = root(i);
+      groups[r].push_back(i);
+    }
+    return groups;
+  }
+  
+  // debug
+  friend ostream& operator << (ostream &s, UnionFind uf) {
+    map<long long, vector<long long>> groups;
+    for (long long i = 0; i < (long long)uf.par.size(); ++i) {
+      long long r = uf.root(i);
+      groups[r].push_back(i);
+    }
+    for (const auto &it : groups) {
+      s << "group: ";
+      for (auto v : it.second) s << v << " ";
+      s << endl;
+    }
+    return s;
+  }
+};
 
 int main(){
-  LL(N);
-  VEC(ll, A, N);
-  VEC(ll, B, N);
-  ll cnt = 0;
+  LL(N, M);
+  VEC(ll, C, N);
+  
+  unordered_map<ll, vector<ll>> mp;
   rep(i, N){
-    if(A[i] <= B[i]){
-      cnt++;
+    mp[C[i]].push_back(i);
+  }
+
+  debug(mp)
+
+  UnionFind uf(N);
+
+  rep(i, M){
+    LL(u, v);
+    u--;
+    v--;
+    if(C[u] == C[v]){
+      uf.merge(u, v);
     }
   }
+
+  debug(uf)
+
+  ll cnt = 0;
+  fore(color, nodes, mp){
+    ll rootnode = nodes[0];
+    rep(i, 1, len(nodes)){
+      if(uf.same(rootnode, nodes[i]) == false){
+        uf.merge(rootnode, nodes[i]);
+        cnt++;
+      }
+    }
+  }
+
   print(cnt);
+
 }

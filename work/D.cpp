@@ -403,17 +403,89 @@ lambda(G&&) -> lambda<std::decay_t<G>>;
 #  define debug(...) ;
 #endif
 
+template <class T>
+struct CumulativeSum2D {
+  vector<vector<T> > data;
 
+  CumulativeSum2D(int H, int W) : data(H + 3, vector<T>(W + 3, 0)) {}
 
-int main(){
-  LL(N);
-  VEC(ll, A, N);
-  VEC(ll, B, N);
-  ll cnt = 0;
-  rep(i, N){
-    if(A[i] <= B[i]){
-      cnt++;
+  void add(int i, int j, T z) {
+    ++i, ++j;
+    if (i >= (int)data.size() || j >= (int)data[0].size()) return;
+    data[i][j] += z;
+  }
+
+  // 半開
+  void imos(int i1, int j1, int i2, int j2, T z = 1) {
+    add(i1, j1, z);
+    add(i1, j2, -z);
+    add(i2, j1, -z);
+    add(i2, j2, z);
+  }
+
+  void build() {
+    for (int i = 1; i < (int)data.size(); i++) {
+      for (int j = 1; j < (int)data[i].size(); j++) {
+        data[i][j] += data[i][j - 1] + data[i - 1][j] - data[i - 1][j - 1];
+      }
     }
   }
-  print(cnt);
+
+  // imos (i,j) を get
+  T imos_get(int i, int j) { return data[i + 1][j + 1]; }
+
+  // 半開
+  T query(int i1, int j1, int i2, int j2) {
+    return (data[i2][j2] - data[i1][j2] - data[i2][j1] + data[i1][j1]);
+  }
+
+  // debug
+  friend ostream& operator<<(ostream& os, const CumulativeSum2D<T>& cumsum) {
+    for (int i = 1; i <= (int)cumsum.data.size() - 3; i++) {
+      for (int j = 1; j <= (int)cumsum.data[i].size() - 3; j++) {
+        os << cumsum.data[i][j];
+        if(j != (int)cumsum.data[i].size() - 3) os << " ";
+      }
+      if(i != (int)cumsum.data.size() - 3) os << endl;
+    }
+    return os;
+  }
+};
+
+int main(){
+  LL(N, Q);
+  VEC(string, kari, N);
+
+  vector<string> P(3 * N);
+  rep(i, 3 * N){
+    P[i] += kari[i % N];
+    P[i] += kari[i % N];
+    P[i] += kari[i % N];
+  }
+
+  CumulativeSum2D<ll> r2d(3 * N, 3 * N);
+  rep(i, 3 * N){
+    rep(j, 3 * N){
+      if(P[i][j] == 'B'){
+        r2d.add(i, j, 1);
+      }
+    }
+  }
+
+  r2d.build();
+
+  print(r2d);
+  rep(_, Q){
+    LL(A, B, C, D);
+    ll yoko = D - B;
+    vector<vector<ll>> yokolist;
+    if(B % N + yoko >= 3 * N){
+      
+    }
+
+    
+    ll tate = C - A + 1;
+    
+    debug(r2d.query(A, B, C + 1, D + 1))
+  }
 }

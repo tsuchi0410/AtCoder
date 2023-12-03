@@ -406,14 +406,33 @@ lambda(G&&) -> lambda<std::decay_t<G>>;
 
 
 int main(){
-  LL(N);
-  VEC(ll, A, N);
-  VEC(ll, B, N);
-  ll cnt = 0;
+  LL(N, M, L);
+  VEC(ll, a, N);
+  VEC(ll, b, M);
+  VEC2(ll, c, ll, d, L);
+  
+  vector<vector<ll>> b2;
+  rep(i, M){
+    b2.push_back({b[i], i});
+  }
+
+  unordered_set<vector<ll>> s;
+  rep(i, L){
+    s.insert({c[i] - 1, d[i] - 1});
+  }
+
+  rsort(b2);
+  
+  ll ans = 0;
   rep(i, N){
-    if(A[i] <= B[i]){
-      cnt++;
+    rep(j, M){
+      if(s.contains({i, b2[j][1]}) == false){
+        chmax(ans, a[i] + b2[j][0]);
+        break;
+      }
     }
   }
-  print(cnt);
+
+  print(ans);
+
 }

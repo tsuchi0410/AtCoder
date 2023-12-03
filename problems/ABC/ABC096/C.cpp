@@ -403,17 +403,37 @@ lambda(G&&) -> lambda<std::decay_t<G>>;
 #  define debug(...) ;
 #endif
 
-
+vector<ll> dx = {0, 0, 1, -1};
+vector<ll> dy = {1, -1, 0, 0};
 
 int main(){
-  LL(N);
-  VEC(ll, A, N);
-  VEC(ll, B, N);
-  ll cnt = 0;
-  rep(i, N){
-    if(A[i] <= B[i]){
-      cnt++;
+  LL(H, W);
+  VEC(string, S, H);
+  string ans = "Yes";
+  rep(i, H){
+    rep(j, W){
+      if(S[i][j] == '.'){
+        continue;
+      }
+      ll cnt = 0;
+      ll cnt_dot = 0;
+      rep(k, len(dx)){
+        rep(l, 1, 2){
+          ll ny = i + dy[k] * l;
+          ll nx = j + dx[k] * l;
+          if(ny < 0 or H <= ny or nx < 0 or W <= nx){
+            break;
+          }
+          if(S[ny][nx] == '.'){
+            cnt_dot++;
+          }
+          cnt++;
+        }
+      }
+      if(cnt == cnt_dot){
+        ans = "No";
+      }
     }
   }
-  print(cnt);
+  print(ans);
 }

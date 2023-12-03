@@ -403,17 +403,159 @@ lambda(G&&) -> lambda<std::decay_t<G>>;
 #  define debug(...) ;
 #endif
 
-
+// R L U D
 
 int main(){
-  LL(N);
-  VEC(ll, A, N);
-  VEC(ll, B, N);
-  ll cnt = 0;
-  rep(i, N){
-    if(A[i] <= B[i]){
-      cnt++;
+  LL(T);
+  rep(_, T){
+    LL(x1, y1);
+    CHAR(d1);
+    LL(x2, y2);
+    CHAR(d2);
+    if(d1 == d2){
+      print("No");
+    }else{
+      unordered_set<char> s;
+      s.insert(d1);
+      s.insert(d2);
+      debug(s)
+      if(s.contains('R') and s.contains('L')){
+        if(y1 != y2){
+          print("No");
+        }else{
+          if(d1 == 'R'){
+            if(x1 < x2){
+              print("Yes");
+            }else{
+              print("No");
+            }
+          }else if(d2 == 'R'){
+            if(x2 < x1){
+              print("Yes");
+            }else{
+              print("No");
+            }        
+          }
+        }
+      }else if(s.contains('R') and s.contains('U')){
+        if(d1 == 'R'){
+          if(x1 > x2){
+            print("No");
+          }else{
+            ll t = x2 - x1;
+            if(y2 + t == y1){
+              print("Yes");
+            }else{
+              print("No");
+            }
+          }
+        }else if(d2 == 'R'){
+          if(x2 > x1){
+            print("No");
+          }else{
+            ll t = x1 - x2;
+            if(y1 + t == y2){
+              print("Yes");
+            }else{
+              print("No");
+            }
+          }
+        }
+      }else if(s.contains('R') and s.contains('D')){
+        if(d1 == 'R'){
+          if(x1 > x2){
+            print("No");
+          }else{
+            ll t = x2 - x1;
+            if(y2 - t == y1){
+              print("Yes");
+            }else{
+              print("No");
+            }
+          }
+        }else if(d2 == 'R'){
+          if(x2 > x1){
+            print("No");
+          }else{
+            ll t = x1 - x2;
+            if(y1 - t == y2){
+              print("Yes");
+            }else{
+              print("No");
+            }
+          }
+        }
+      }else if(s.contains('L') and s.contains('D')){
+        if(d1 == 'L'){
+          if(x1 < x2){
+            print("No");
+            continue;
+          }
+          ll t = x1 - x2;
+          if(y2 - t == y1){
+            print("Yes");
+          }else{
+            print("No");
+          }
+        }else if(d2 == 'L'){
+          if(x2 < x1){
+            print("No");
+            continue;
+          }
+          ll t = x2 - x1;
+          if(y1 - t == y2){
+            print("Yes");
+          }else{
+            print("No");
+          }
+        }
+      }else if(s.contains('L') and s.contains('U')){
+        if(d1 == 'L'){
+          if(x1 < x2){
+            print("No");
+            continue;
+          }
+          ll t = x1 - x2;
+          if(y2 + t == y1){
+            print("Yes");
+          }else{
+            print("No");
+          }
+        }else if(d2 == 'L'){
+          if(x2 < x1){
+            print("No");
+            continue;
+          }
+          ll t = x2 - x1;
+          if(y1 + t == y2){
+            print("Yes");
+          }else{
+            print("No");
+          }
+        }
+      }else if(s.contains('U') and s.contains('D')){
+        if(d1 == 'D'){
+          if(x1 != x2){
+            print("No");
+          }else{
+            if(y1 > y2){
+              print("Yes");
+            }else{
+              print("No");
+            }
+          }
+        }else if(d2 == 'D'){
+          if(x1 != x2){
+            print("No");
+          }else{
+            if(y2 > y1){
+              print("Yes");
+            }else{
+              print("No");
+            }
+          }
+        }
+      }
     }
   }
-  print(cnt);
 }

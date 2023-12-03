@@ -403,17 +403,36 @@ lambda(G&&) -> lambda<std::decay_t<G>>;
 #  define debug(...) ;
 #endif
 
-
+vector<vector<long long>> nCk(long long N, long long K){
+  std::string bitmask(K, 1);
+  bitmask.resize(N, 0);
+  vector<vector<long long>> res;
+  do{
+    vector<long long> v;
+    for(long long i = 0; i < N; ++i) if(bitmask[i]) v.push_back(i);
+    res.push_back(v);
+  }while(std::prev_permutation(bitmask.begin(), bitmask.end()));
+  return res;
+}
 
 int main(){
-  LL(N);
+  LL(N, K);
   VEC(ll, A, N);
-  VEC(ll, B, N);
-  ll cnt = 0;
-  rep(i, N){
-    if(A[i] <= B[i]){
-      cnt++;
+  vector<vector<long long>> comb = nCk(N, K);
+  ll ans = 0;
+  rep(i, len(comb)){
+    ll n998 = 0;
+    ll n998244353 = 0;
+    rep(j, K){
+      n998 += A[comb[i][j]];
+      n998 %= 998;
+      n998244353 += A[comb[i][j]];
+      n998244353 %= MOD;
+    }
+    if(n998244353 <= n998){
+      ans++;
+      ans %= 998;
     }
   }
-  print(cnt);
+  print(ans);
 }
