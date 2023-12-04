@@ -406,8 +406,53 @@ lambda(G&&) -> lambda<std::decay_t<G>>;
 
 
 int main(){
-  LL(N, X, Y);
-  VEC(ll, A, N);
-  bool fmax = false;
-  bool
+  LL(N, M);
+  VEC(string, S, N);
+
+  // 0 から すべての点への最短距離
+  vector<ll> dp(N, INF);
+  dp[0] = 0;
+  rep(i, N){
+    rep(j, M){
+      if(S[i][j] == '1'){
+        chmin(dp[i + j + 1], dp[i] + 1);
+      }
+    }
+  }
+
+  debug(dp)
+  
+  // N - 1 からすべての点への最短距離
+  vector<ll> rdp(N, INF);
+  rdp[N - 1] = 0;
+  rrep(i, N - 1, -1){
+    rep(j, M){
+      if(S[i][j] == '1'){
+        chmin(rdp[i], rdp[i + j + 1] + 1);
+      }
+    }
+  }
+
+  debug(rdp)
+
+  vector<ll> ans;
+  rep(k, 1, N - 1){
+    debug(k)
+    ll cnt = INF;
+    rep(left, max(ll(0), k - M + 1), k){
+      rep(j, M){
+        if(S[left][j] == '1' and k < left + j + 1){
+          chmin(cnt, dp[left] + 1 + rdp[left + j + 1]);
+        }
+      }
+    }
+    if(cnt == INF){
+      ans.push_back(-1);
+    }else{
+      ans.push_back(cnt);
+    }
+  }
+
+  print(ans);
+
 }
