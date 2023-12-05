@@ -9,8 +9,8 @@ using ld = long double;
 // cout << fixed << setprecision(10);
 const ll INF = 1e18;
 const ld PI = acos(-1);
-const ll MOD = 998244353;
-// const ll MOD = 1000000007;
+// const ll MOD = 998244353;
+const ll MOD = 1000000007;
 
 /* 関数 */
 #define ctoll(x) static_cast<long long>(x - '0')
@@ -403,152 +403,67 @@ lambda(G&&) -> lambda<std::decay_t<G>>;
 #  define debug(...) ;
 #endif
 
-// Lazy Segment Tree
-template<class Monoid, class Action> struct LazySegmentTree {
-  // various function types
-  using FuncOperator = function<Monoid(Monoid, Monoid)>;
-  using FuncMapping = function<Monoid(Action, Monoid)>;
-  using FuncComposition = function<Action(Action, Action)>;
+// Segment Tree
+template<class Monoid> struct SegmentTree {
+  using Func = function<Monoid(Monoid, Monoid)>;
 
   // core member
-  int N;
-  FuncOperator OP;
-  FuncMapping MAPPING;
-  FuncComposition COMPOSITION;
-  Monoid IDENTITY_MONOID;
-  Action IDENTITY_ACTION;
+  long long N;
+  Func OP;
+  Monoid IDENTITY;
   
   // inner data
-  int log, offset;
+  long long log, offset;
   vector<Monoid> dat;
-  vector<Action> lazy;
-  
+
   // constructor
-  LazySegmentTree() {}
-  LazySegmentTree(int n,
-                  const FuncOperator op,
-                  const FuncMapping mapping,
-                  const FuncComposition composition,
-                  const Monoid &identity_monoid,
-                  const Action &identity_action) {
-    init(n, op, mapping, composition, identity_monoid, identity_action);
+  SegmentTree() {}
+  SegmentTree(long long n, const Func &op, const Monoid &identity) {
+    init(n, op, identity);
   }
-  LazySegmentTree(const vector<Monoid> &v,
-                  const FuncOperator op,
-                  const FuncMapping mapping,
-                  const FuncComposition composition,
-                  const Monoid &identity_monoid,
-                  const Action &identity_action) {
-    init(v, op, mapping, composition, identity_monoid, identity_action);
+  SegmentTree(const vector<Monoid> &v, const Func &op, const Monoid &identity) {
+    init(v, op, identity);
   }
-  void init(int n,
-            const FuncOperator op,
-            const FuncMapping mapping,
-            const FuncComposition composition,
-            const Monoid &identity_monoid,
-            const Action &identity_action) {
-    N = n, OP = op, MAPPING = mapping, COMPOSITION = composition;
-    IDENTITY_MONOID = identity_monoid, IDENTITY_ACTION = identity_action;
+  void init(long long n, const Func &op, const Monoid &identity) {
+    N = n;
+    OP = op;
+    IDENTITY = identity;
     log = 0, offset = 1;
     while (offset < N) ++log, offset <<= 1;
-    dat.assign(offset * 2, IDENTITY_MONOID);
-    lazy.assign(offset * 2, IDENTITY_ACTION);
+    dat.assign(offset * 2, IDENTITY);
   }
-  void init(const vector<Monoid> &v,
-            const FuncOperator op,
-            const FuncMapping mapping,
-            const FuncComposition composition,
-            const Monoid &identity_monoid,
-            const Action &identity_action) {
-    init((int)v.size(), op, mapping, composition, identity_monoid, identity_action);
+  void init(const vector<Monoid> &v, const Func &op, const Monoid &identity) {
+    init((long long)v.size(), op, identity);
     build(v);
   }
-  void build(const vector<Monoid> &v) {
-    assert(N == (int)v.size());
-    for (int i = 0; i < N; ++i) dat[i + offset] = v[i];
-    for (int k = offset - 1; k > 0; --k) pull_dat(k);
-  }
-  int size() const {
-    return N;
-  }
-  
-  // basic functions for lazy segment tree
-  void pull_dat(int k) {
+  void pull(long long k) {
     dat[k] = OP(dat[k * 2], dat[k * 2 + 1]);
   }
-  void apply_lazy(int k, const Action &f) {
-    dat[k] = MAPPING(f, dat[k]);
-    if (k < offset) lazy[k] = COMPOSITION(f, lazy[k]);
+  void build(const vector<Monoid> &v) {
+    assert(N == (long long)v.size());
+    for (long long i = 0; i < N; ++i) dat[i + offset] = v[i];
+    for (long long k = offset - 1; k > 0; --k) pull(k);
   }
-  void push_lazy(int k) {
-    apply_lazy(k * 2, lazy[k]);
-    apply_lazy(k * 2 + 1, lazy[k]);
-    lazy[k] = IDENTITY_ACTION;
+  long long size() const {
+    return N;
   }
-  void pull_dat_deep(int k) {
-    for (int h = 1; h <= log; ++h) pull_dat(k >> h);
-  }
-  void push_lazy_deep(int k) {
-    for (int h = log; h >= 1; --h) push_lazy(k >> h);
+  Monoid operator [] (long long i) const {
+    return dat[i + offset];
   }
   
-  // setter and getter, update A[i], i is 0-indexed, O(log N)
-  void set(int i, const Monoid &v) {
+  // update A[i], i is 0-indexed, O(log N)
+  void set(long long i, const Monoid &v) {
     assert(0 <= i && i < N);
-    int k = i + offset;
-    push_lazy_deep(k);
+    long long k = i + offset;
     dat[k] = v;
-    pull_dat_deep(k);
-  }
-  Monoid get(int i) {
-    assert(0 <= i && i < N);
-    int k = i + offset;
-    push_lazy_deep(k);
-    return dat[k];
-  }
-  Monoid operator [] (int i) {
-    return get(i);
+    while (k >>= 1) pull(k);
   }
   
-  // apply f for index i
-  void apply(int i, const Action &f) {
-    assert(0 <= i && i < N);
-    int k = i + offset;
-    push_lazy_deep(k);
-    dat[k] = MAPPING(f, dat[k]);
-    pull_dat_deep(k);
-  }
-  // apply f for interval [l, r)
-  void apply(int l, int r, const Action &f) {
+  // get [l, r), l and r are 0-indexed, O(log N)
+  Monoid prod(long long l, long long r) {
     assert(0 <= l && l <= r && r <= N);
-    if (l == r) return;
+    Monoid val_left = IDENTITY, val_right = IDENTITY;
     l += offset, r += offset;
-    for (int h = log; h >= 1; --h) {
-      if (((l >> h) << h) != l) push_lazy(l >> h);
-      if (((r >> h) << h) != r) push_lazy((r - 1) >> h);
-    }
-    int original_l = l, original_r = r;
-    for (; l < r; l >>= 1, r >>= 1) {
-      if (l & 1) apply_lazy(l++, f);
-      if (r & 1) apply_lazy(--r, f);
-    }
-    l = original_l, r = original_r;
-    for (int h = 1; h <= log; ++h) {
-      if (((l >> h) << h) != l) pull_dat(l >> h);
-      if (((r >> h) << h) != r) pull_dat((r - 1) >> h);
-    }
-  }
-  
-  // get prod of interval [l, r)
-  Monoid prod(int l, int r) {
-    assert(0 <= l && l <= r && r <= N);
-    if (l == r) return IDENTITY_MONOID;
-    l += offset, r += offset;
-    for (int h = log; h >= 1; --h) {
-      if (((l >> h) << h) != l) push_lazy(l >> h);
-      if (((r >> h) << h) != r) push_lazy(r >> h);
-    }
-    Monoid val_left = IDENTITY_MONOID, val_right = IDENTITY_MONOID;
     for (; l < r; l >>= 1, r >>= 1) {
       if (l & 1) val_left = OP(val_left, dat[l++]);
       if (r & 1) val_right = OP(dat[--r], val_right);
@@ -559,18 +474,16 @@ template<class Monoid, class Action> struct LazySegmentTree {
     return dat[1];
   }
   
-  // get max r such that f(v) = True (v = prod(l, r)), O(log N)
+  // get max r that f(get(l, r)) = True (0-indexed), O(log N)
   // f(IDENTITY) need to be True
-  int max_right(const function<bool(Monoid)> f, int l = 0) {
+  long long max_right(const function<bool(Monoid)> f, long long l = 0) {
     if (l == N) return N;
     l += offset;
-    push_lazy_deep(l);
-    Monoid sum = IDENTITY_MONOID;
+    Monoid sum = IDENTITY;
     do {
       while (l % 2 == 0) l >>= 1;
       if (!f(OP(sum, dat[l]))) {
         while (l < offset) {
-          push_lazy(l);
           l = l * 2;
           if (f(OP(sum, dat[l]))) {
             sum = OP(sum, dat[l]);
@@ -587,18 +500,16 @@ template<class Monoid, class Action> struct LazySegmentTree {
 
   // get min l that f(get(l, r)) = True (0-indexed), O(log N)
   // f(IDENTITY) need to be True
-  int min_left(const function<bool(Monoid)> f, int r = -1) {
+  long long min_left(const function<bool(Monoid)> f, long long r = -1) {
     if (r == 0) return 0;
     if (r == -1) r = N;
     r += offset;
-    push_lazy_deep(r - 1);
-    Monoid sum = IDENTITY_MONOID;
+    Monoid sum = IDENTITY;
     do {
       --r;
       while (r > 1 && (r % 2)) r >>= 1;
       if (!f(OP(dat[r], sum))) {
         while (r < offset) {
-          push_lazy(r);
           r = r * 2 + 1;
           if (f(OP(dat[r], sum))) {
             sum = OP(dat[r], sum);
@@ -612,46 +523,25 @@ template<class Monoid, class Action> struct LazySegmentTree {
     return 0;
   }
   
-  // debug stream
-  friend ostream& operator << (ostream &s, LazySegmentTree seg) {
-    for (int i = 0; i < (int)seg.size(); ++i) {
+  // debug
+  friend ostream& operator << (ostream &s, const SegmentTree &seg) {
+    for (long long i = 0; i < (long long)seg.size(); ++i) {
       s << seg[i];
-      if (  i != (int)seg.size() - 1) s << " ";
+      if (i != (long long)seg.size() - 1) s << " ";
     }
     return s;
-  }
-  
-  // dump
-  void dump() {
-    for (int i = 0; i <= log; ++i) {
-      for (int j = (1 << i); j < (1 << (i + 1)); ++j) {
-        cout << "{" << dat[j] << "," << lazy[j] << "} ";
-      }
-      cout << endl;
-    }
   }
 };
 
 int main(){
-  LL(N, Q);
-  using pll = pair<long long, long long>;
-  vector<pll> v(N, pll(0, 1));
-  const pll identity_monoid = {0, 0};  // {val, range}
-  const long long identity_action = 0;
-  auto op = [&](pll x, pll y) { return pll(x.first + y.first, x.second + y.second); };
-  auto mapping = [&](long long f, pll x) { return pll(x.first + f * x.second, x.second); };
-  auto composition = [&](long long g, long long f) { return g + f; };
-  LazySegmentTree<pll, long long> seg(v, op, mapping, composition, identity_monoid, identity_action);
-
-  rep(i, Q){
-    LL(q);
-    // update
-    if(q == 0){
-      LL(s, t, x);
-      seg.apply(s, t + 1, x);
-    }else{ // find
-      LL(s, t);
-      print(seg.prod(s, t + 1).first);
-    }
+  LL(N, W, L, R);
+  vector<ll> X = {0};
+  rep(i, N){
+    LL(x);
+    X.push_back(x);
   }
+  X.push_back(W);
+  
+  vector<ll> v(N);
+  SegmentTree<ll> seg(v, [&](ll a, ll b){ return op; }, e);
 }
