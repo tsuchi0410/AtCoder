@@ -406,8 +406,31 @@ lambda(G&&) -> lambda<std::decay_t<G>>;
 
 
 int main(){
-  unordered_set<vector<ll>> s;
-  s.insert({1, 2, 3});
-  s.insert({1, 3, 2});
-  debug(s)
+  LL(N);
+  VEC2(ll, X, ll, Y, N);
+  unordered_set<ll> s;
+  rep(i, N){
+    s.insert(i);
+  }
+  s.erase(0);
+  ll now = 0;
+  vector<ll> ans = {0};
+  while(len(s)){
+    ld nvmin = INF;
+    ll nxt;
+    fore(nv, s){
+      ld nvdist = sqrt(pow(X[now] - X[nv], 2) + pow(Y[now] - Y[nv], 2));
+      if(nvdist < nvmin){
+        nvmin = nvdist;
+        nxt = nv;
+      }
+    }
+    ans.push_back(nxt);
+    s.erase(nxt);
+    now = nxt;
+  }
+  ans.push_back(0);
+  fore(v, ans){
+    print(v + 1);
+  }
 }

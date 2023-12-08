@@ -9,8 +9,8 @@ using ld = long double;
 // cout << fixed << setprecision(10);
 const ll INF = 1e18;
 const ld PI = acos(-1);
-// const ll MOD = 998244353;
-const ll MOD = 1000000007;
+const ll MOD = 998244353;
+// const ll MOD = 1000000007;
 
 /* 関数 */
 #define ctoll(x) static_cast<long long>(x - '0')
@@ -403,145 +403,56 @@ lambda(G&&) -> lambda<std::decay_t<G>>;
 #  define debug(...) ;
 #endif
 
-// Segment Tree
-template<class Monoid> struct SegmentTree {
-  using Func = function<Monoid(Monoid, Monoid)>;
+ll N;
+ll X[160], Y[160];
 
-  // core member
-  long long N;
-  Func OP;
-  Monoid IDENTITY;
-  
-  // inner data
-  long long log, offset;
-  vector<Monoid> dat;
+// a 以上 b 以下の整数
+ll randomrange_ll(ll a, ll b){
+  return a + rand() % (b - a + 1);
+}
 
-  // constructor
-  SegmentTree() {}
-  SegmentTree(long long n, const Func &op, const Monoid &identity) {
-    init(n, op, identity);
-  }
-  SegmentTree(const vector<Monoid> &v, const Func &op, const Monoid &identity) {
-    init(v, op, identity);
-  }
-  void init(long long n, const Func &op, const Monoid &identity) {
-    N = n;
-    OP = op;
-    IDENTITY = identity;
-    log = 0, offset = 1;
-    while (offset < N) ++log, offset <<= 1;
-    dat.assign(offset * 2, IDENTITY);
-  }
-  void init(const vector<Monoid> &v, const Func &op, const Monoid &identity) {
-    init((long long)v.size(), op, identity);
-    build(v);
-  }
-  void pull(long long k) {
-    dat[k] = OP(dat[k * 2], dat[k * 2 + 1]);
-  }
-  void build(const vector<Monoid> &v) {
-    assert(N == (long long)v.size());
-    for (long long i = 0; i < N; ++i) dat[i + offset] = v[i];
-    for (long long k = offset - 1; k > 0; --k) pull(k);
-  }
-  long long size() const {
-    return N;
-  }
-  Monoid operator [] (long long i) const {
-    return dat[i + offset];
-  }
-  
-  // update A[i], i is 0-indexed, O(log N)
-  void set(long long i, const Monoid &v) {
-    assert(0 <= i && i < N);
-    long long k = i + offset;
-    dat[k] = v;
-    while (k >>= 1) pull(k);
-  }
-  
-  // get [l, r), l and r are 0-indexed, O(log N)
-  Monoid prod(long long l, long long r) {
-    assert(0 <= l && l <= r && r <= N);
-    Monoid val_left = IDENTITY, val_right = IDENTITY;
-    l += offset, r += offset;
-    for (; l < r; l >>= 1, r >>= 1) {
-      if (l & 1) val_left = OP(val_left, dat[l++]);
-      if (r & 1) val_right = OP(dat[--r], val_right);
-    }
-    return OP(val_left, val_right);
-  }
-  Monoid all_prod() {
-    return dat[1];
-  }
-  
-  // get max r that f(get(l, r)) = True (0-indexed), O(log N)
-  // f(IDENTITY) need to be True
-  long long max_right(const function<bool(Monoid)> f, long long l = 0) {
-    if (l == N) return N;
-    l += offset;
-    Monoid sum = IDENTITY;
-    do {
-      while (l % 2 == 0) l >>= 1;
-      if (!f(OP(sum, dat[l]))) {
-        while (l < offset) {
-          l = l * 2;
-          if (f(OP(sum, dat[l]))) {
-            sum = OP(sum, dat[l]);
-            ++l;
-          }
-        }
-        return l - offset;
-      }
-      sum = OP(sum, dat[l]);
-      ++l;
-    } while ((l & -l) != l);  // stop if l = 2^e
-    return N;
-  }
+ld calc_score(ll u, ll v){
+  return sqrt(pow(X[u] - X[v], 2) + pow(Y[u] - Y[v], 2));
+}
 
-  // get min l that f(get(l, r)) = True (0-indexed), O(log N)
-  // f(IDENTITY) need to be True
-  long long min_left(const function<bool(Monoid)> f, long long r = -1) {
-    if (r == 0) return 0;
-    if (r == -1) r = N;
-    r += offset;
-    Monoid sum = IDENTITY;
-    do {
-      --r;
-      while (r > 1 && (r % 2)) r >>= 1;
-      if (!f(OP(dat[r], sum))) {
-        while (r < offset) {
-          r = r * 2 + 1;
-          if (f(OP(dat[r], sum))) {
-            sum = OP(dat[r], sum);
-            --r;
-          }
-        }
-        return r + 1 - offset;
-      }
-      sum = OP(dat[r], sum);
-    } while ((r & -r) != r);
-    return 0;
+ld get_score(vector<ll> &P){
+  ld score = 0;
+  rep(i, N){
+    score += calc_score(P[i], P[i + 1]);
   }
-  
-  // debug
-  friend ostream& operator << (ostream &s, const SegmentTree &seg) {
-    for (long long i = 0; i < (long long)seg.size(); ++i) {
-      s << seg[i];
-      if (i != (long long)seg.size() - 1) s << " ";
-    }
-    return s;
-  }
-};
+  return score;
+}
 
 int main(){
-  LL(N, W, L, R);
-  vector<ll> X = {0};
+  cin >> N;
   rep(i, N){
-    LL(x);
-    X.push_back(x);
+    cin >> X[i] >> Y[i];
   }
-  X.push_back(W);
-  
-  vector<ll> v(N);
-  SegmentTree<ll> seg(v, [&](ll a, ll b){ return op; }, e);
+
+  // 初期解生成
+  vector<ll> P;
+  rep(i, N){
+    P.push_back(i);
+  }
+  P.push_back(0);
+
+  // 山登り法
+  ld current_score = get_score(P);
+  ll NMAX = 2300000;
+  rep(i, NMAX){
+    ll left = randomrange_ll(1, N - 1);
+    ll right = randomrange_ll(left + 1, N);
+    auto l_iter = P.begin() + left;
+    auto r_iter = P.begin() + right;
+    reverse(l_iter, r_iter);
+    ld new_score = get_score(P);
+    if(new_score < current_score){
+      current_score = new_score;
+    }else{
+      reverse(l_iter, r_iter);
+    }
+  }
+  fore(v, P){
+    print(v + 1);
+  }
 }
