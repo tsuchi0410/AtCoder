@@ -403,56 +403,53 @@ lambda(G&&) -> lambda<std::decay_t<G>>;
 #  define debug(...) ;
 #endif
 
-ll N;
-ll X[160], Y[160];
 
-// a 以上 b 以下の整数
-ll randomrange_ll(ll a, ll b){
-  return a + rand() % (b - a + 1);
-}
-
-ld calc_score(ll u, ll v){
-  return sqrt(pow(X[u] - X[v], 2) + pow(Y[u] - Y[v], 2));
-}
-
-ld get_score(vector<ll> &P){
-  ld score = 0;
-  rep(i, N){
-    score += calc_score(P[i], P[i + 1]);
-  }
-  return score;
-}
 
 int main(){
-  cin >> N;
-  rep(i, N){
-    cin >> X[i] >> Y[i];
-  }
+  LL(N, M);
+  STR(S);
 
-  // 初期解生成
-  vector<ll> P;
-  rep(i, N){
-    P.push_back(i);
-  }
-  P.push_back(0);
-
-  // 山登り法
-  ld current_score = get_score(P);
-  ll NMAX = 2300000;
-  rep(i, NMAX){
-    ll left = randomrange_ll(1, N - 1);
-    ll right = randomrange_ll(left + 1, N);
-    auto l_iter = P.begin() + left;
-    auto r_iter = P.begin() + right;
-    reverse(l_iter, r_iter);
-    ld new_score = get_score(P);
-    if(new_score < current_score){
-      current_score = new_score;
-    }else{
-      reverse(l_iter, r_iter);
+  lambda is_ok = [&](auto&& is_ok, ll mid) -> bool{
+    ll muzi = M;
+    ll logot = mid;
+    rep(i, N){
+      if(S[i] == '1'){
+        if(muzi > 0){
+          muzi--;
+        }else if(logot > 0){
+          logot--;
+        }else{
+          return false;
+        }
+      }else if(S[i] == '2'){
+        if(logot > 0){
+          logot--;
+        }else{
+          return false;
+        }
+      }else{
+        muzi = M;
+        logot = mid;
+      }
     }
-  }
-  fore(v, P){
-    print(v + 1);
-  }
+    return true;
+  };
+
+  lambda bisect = [&](auto&& bisect, ll l, ll r) -> ll{
+    while(abs(r - l) > 1){
+      ll mid = (r + l) / 2;
+      debug(l, mid, r);
+      if(is_ok(mid)){
+        r = mid;
+      }else{
+        l = mid;
+      }
+    }
+    return r;
+  };
+
+  ll l = -1;
+  ll r = 10000;
+  ll ans = bisect(l, r);
+  print(ans);
 }

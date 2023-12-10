@@ -403,63 +403,23 @@ lambda(G&&) -> lambda<std::decay_t<G>>;
 #  define debug(...) ;
 #endif
 
-
-
-ll N;
-ll X[160], Y[160];
-
-// 0 以上 1 以下のランダムな実数
-double 
-
-// a 以上 b 以下の整数
-ll randomrange_ll(ll a, ll b){
-  return a + rand() % (b - a + 1);
-}
-
-// スコアを計算
-ld calc_score(ll u, ll v){
-  return sqrt(pow(X[u] - X[v], 2) + pow(Y[u] - Y[v], 2));
-}
-
-// スコアを生成
-ld get_score(vector<ll> &P){
-  ld score = 0;
-  rep(i, N){
-    score += calc_score(P[i], P[i + 1]);
-  }
-  return score;
+vector<vector<long long>> nCk(long long N, long long K){
+  std::string bitmask(K, 1);
+  bitmask.resize(N, 0);
+  vector<vector<long long>> res;
+  do{
+    vector<long long> v;
+    for(long long i = 0; i < N; ++i) if(bitmask[i]) v.push_back(i);
+    res.push_back(v);
+  }while(std::prev_permutation(bitmask.begin(), bitmask.end()));
+  return res;
 }
 
 int main(){
-  cin >> N;
-  rep(i, N){
-    cin >> X[i] >> Y[i];
-  }
-
-  // 初期解生成
-  vector<ll> P;
-  rep(i, N){
-    P.push_back(i);
-  }
-  P.push_back(0);
-
-  // 山登り法
-  ld current_score = get_score(P);
-  ll NMAX = 300000;
-  rep(i, NMAX){
-    ll left = randomrange_ll(1, N - 1);
-    ll right = randomrange_ll(left + 1, N);
-    auto l_iter = P.begin() + left;
-    auto r_iter = P.begin() + right;
-    reverse(l_iter, r_iter);
-    ld new_score = get_score(P);
-    if(new_score < current_score){
-      current_score = new_score;
-    }else{
-      reverse(l_iter, r_iter);
-    }
-  }
-  fore(v, P){
-    print(v + 1);
-  }
+  LL(N, D);
+  VEC(ll, W, N);
+  ld ans = 0;
+  
+  vector<vector<long long>> comb = nCk(N, D);
+  debug(comb)
 }
