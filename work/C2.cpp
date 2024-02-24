@@ -1,3 +1,5 @@
+#pragma region
+
 #include <bits/stdc++.h>
 using namespace std;
 
@@ -39,7 +41,7 @@ auto sum(vector<T>& v){
   return accumulate(v.begin(), v.end(), 0LL);
 }
 template <typename T>
-vector<T> cum(vector<T> &v){
+vector<T> cumsum(vector<T> &v){
   vector<T> s = {0};
   for(ll i = 0; i < (ll)v.size(); i++) s.push_back(s[i] + v[i]);
   return s;
@@ -403,53 +405,22 @@ lambda(G&&) -> lambda<std::decay_t<G>>;
 #  define debug(...) ;
 #endif
 
+#pragma endregion
+
 
 
 int main(){
-  LL(N, M);
-  STR(S);
-
-  lambda is_ok = [&](auto&& is_ok, ll mid) -> bool{
-    ll muzi = M;
-    ll logot = mid;
-    rep(i, N){
-      if(S[i] == '1'){
-        if(muzi > 0){
-          muzi--;
-        }else if(logot > 0){
-          logot--;
-        }else{
-          return false;
-        }
-      }else if(S[i] == '2'){
-        if(logot > 0){
-          logot--;
-        }else{
-          return false;
-        }
-      }else{
-        muzi = M;
-        logot = mid;
-      }
+  LL(N);
+  unordered_map<ll, ll> mp;
+  lambda f = [&](auto&& f, ll x) -> ll {
+    if(x == 1){
+      return 0;
     }
-    return true;
-  };
-
-  lambda bisect = [&](auto&& bisect, ll l, ll r) -> ll{
-    while(abs(r - l) > 1){
-      ll mid = (r + l) / 2;
-      debug(l, mid, r);
-      if(is_ok(mid)){
-        r = mid;
-      }else{
-        l = mid;
-      }
+    if(mp.contains(x)){
+      return mp[x];
     }
-    return r;
+    mp[x] = f(x / 2) + f((x + 1) / 2) + x;
+    return mp[x];
   };
-
-  ll l = -1;
-  ll r = 10000;
-  ll ans = bisect(l, r);
-  print(ans);
+  print(f(N));
 }

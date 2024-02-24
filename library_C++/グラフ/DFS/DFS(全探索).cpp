@@ -1,9 +1,21 @@
-lambda dfs = [&](auto&& dfs, ) -> void {
-        //判定 : 条件を満たすなら return;
+lambda dfs = [&](auto&& dfs, vector<vector<ll>> teams, ll np) -> void {
+  // 判定 
+  if(np == N){
+    debug(teams)
+    return ;
+  }
+  
+  // 既存のチームに追加
+  fore(team, teams){
+    team.push_back(np);
+    dfs(teams, np + 1);
+    team.pop_back();
+  }
 
-        /*
-        rep で dfs 全探索
-        dfsしたあと pop_back など
-        条件が複数あるなら続けて書く
-        */
+  // 新規チーム
+  teams.push_back({np});
+  dfs(teams, np + 1);
+  return ;
 };
+vector<vector<ll>> teams;
+dfs(teams, 0);

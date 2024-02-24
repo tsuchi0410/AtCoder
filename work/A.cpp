@@ -1,3 +1,5 @@
+#pragma region
+
 #include <bits/stdc++.h>
 using namespace std;
 
@@ -39,7 +41,7 @@ auto sum(vector<T>& v){
   return accumulate(v.begin(), v.end(), 0LL);
 }
 template <typename T>
-vector<T> cum(vector<T> &v){
+vector<T> cumsum(vector<T> &v){
   vector<T> s = {0};
   for(ll i = 0; i < (ll)v.size(); i++) s.push_back(s[i] + v[i]);
   return s;
@@ -403,18 +405,14 @@ lambda(G&&) -> lambda<std::decay_t<G>>;
 #  define debug(...) ;
 #endif
 
+#pragma endregion
+
 
 
 int main(){
-  LL(N, S, K);
-  VEC2(ll, P, ll, Q, N);
-  ll cnt = 0;
-  rep(i, N){
-    cnt += P[i] * Q[i];
+  LL(A, B, D);
+  rep(i, A, B + 1, D){
+    cout << i << " ";
   }
-  if(cnt >= S){
-    print(cnt);
-  }else{
-    print(cnt + K);
-  }
+  cout << endl;
 }

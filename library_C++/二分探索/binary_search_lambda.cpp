@@ -2,8 +2,6 @@
 
 境界に関して
 下限:
-0 か -1 にする
-下限が決まっている場合は
 x か x - 1 にする
 
 上限
@@ -32,3 +30,22 @@ lambda bisect = [&](auto&& bisect, ll l, ll r) -> ll{
 ll l = 0;
 ll r = INF;
 ll ans = bisect(l, r);
+
+
+// 小数点
+lambda is_ok = [&](auto&& is_ok, ld border) -> bool{
+
+};
+
+lambda bisect = [&](auto&& bisect, ld l, ld r) -> ld{
+  while(abs(r - l) > 0.00000001){
+    ld mid = (r + l) / 2;
+    debug(l, mid, r);
+    if(is_ok(mid)){
+      r = mid;
+    }else{
+      l = mid;
+    }
+  }
+  return r;
+};

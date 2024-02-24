@@ -7,7 +7,7 @@ https://atcoder.jp/contests/abc275/tasks/abc275_d
 
 int main(){
   LL(N);
-  umap<ll, ll> mp;
+  unordered_map<ll, ll> mp;
   lambda f = [&](auto&& f, ll x) -> ll {
     if(x == 0){
       return 1;

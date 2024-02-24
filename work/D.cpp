@@ -1,3 +1,5 @@
+#pragma region
+
 #include <bits/stdc++.h>
 using namespace std;
 
@@ -39,7 +41,7 @@ auto sum(vector<T>& v){
   return accumulate(v.begin(), v.end(), 0LL);
 }
 template <typename T>
-vector<T> cum(vector<T> &v){
+vector<T> cumsum(vector<T> &v){
   vector<T> s = {0};
   for(ll i = 0; i < (ll)v.size(); i++) s.push_back(s[i] + v[i]);
   return s;
@@ -403,82 +405,45 @@ lambda(G&&) -> lambda<std::decay_t<G>>;
 #  define debug(...) ;
 #endif
 
+#pragma endregion
+
 
 
 int main(){
-  LL(H, W);
-  VVEC(ll, A, H, W);
-  VVEC(ll, B, H, W);
-  // 行
-  vector<ll> row(H, INF);
-  rep(i, H){
-    rep(ii, H){
-      multiset<ll> s1, s2;
-      rep(j, W){
-        s1.insert(A[i][j]);
-        s2.insert(B[ii][j]);
-      }
-      if(s1 == s2){
-        if(index(row, {ii}) == -1){
-          row[i] = ii;
-        }else{
-          if(abs(i - row[i]) > abs(i - ))
-        }
+  LL(N);
+  vector<vector<vector<ll>>> G(N);
+  rep(i, N - 1){
+    LL(A, B, X);
+    X--;
+    G[i].push_back({i + 1, A});
+    G[i].push_back({X, B});
+  }
+
+  vector<ll> dist(N, INF);
+  dist[0] = 0;
+  vector<bool> seen(N, false);
+
+  // {cost, v}
+  pqg<vector<ll>> q;
+  q.push({0, 0});
+
+  while(len(q)) {
+    ll cost_v = q.top()[0];
+    ll v = q.top()[1];
+    q.pop();
+
+    if(seen[v]) continue;
+
+    seen[v] = true;
+    fore(i, G[v]){
+      ll nv = i[0];
+      ll cost_nv = i[1];
+      if(dist[nv] > cost_v + cost_nv){
+        dist[nv] = cost_v + cost_nv;
+        q.push({dist[nv], nv});
       }
     }
   }
 
-  // 列
-  vector<ll> col(W, INF);
-  rep(j, W){
-    rep(jj, W){
-      multiset<ll> s1, s2;
-      rep(i, H){
-        s1.insert(A[i][j]);
-        s2.insert(B[i][jj]);
-      }
-      if(s1 == s2){
-        if(index(col, {jj}) == -1){
-          col[j] = jj;
-        }
-      }
-    }
-  }
-  debug(row, col)
-  if(index(col, {INF}) != -1 or index(row, {INF}) != -1){
-    print(-1);
-    return 0;
-  }
-
-  ll cnt = 0;
-  while(1){
-    bool f = true;
-    rep(i, H){
-      if(row[i] > i){
-        swap(row[i], row[i + 1]);
-        cnt++;
-        f = false;
-      }
-    }
-    if(f == true){
-      break;
-    }
-  }
-
-  while(1){
-    bool f = true;
-    rep(i, W){
-      if(col[i] > i){
-        swap(col[i], col[i + 1]);
-        cnt++;
-        f = false;
-      }
-    }
-    if(f == true){
-      break;
-    }
-  }
-
-  print(cnt);
-
+  print(dist[N - 1]);
 }

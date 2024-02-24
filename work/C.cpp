@@ -1,3 +1,5 @@
+#pragma region
+
 #include <bits/stdc++.h>
 using namespace std;
 
@@ -39,7 +41,7 @@ auto sum(vector<T>& v){
   return accumulate(v.begin(), v.end(), 0LL);
 }
 template <typename T>
-vector<T> cum(vector<T> &v){
+vector<T> cumsum(vector<T> &v){
   vector<T> s = {0};
   for(ll i = 0; i < (ll)v.size(); i++) s.push_back(s[i] + v[i]);
   return s;
@@ -403,47 +405,51 @@ lambda(G&&) -> lambda<std::decay_t<G>>;
 #  define debug(...) ;
 #endif
 
-vector<pair<char, ll>> encode(const string& str) {
-  ll n = (ll)str.size();
-  vector<pair<char, ll>> ret;
-  for (ll l = 0; l < n;) {
-    ll r = l + 1;
-    for (; r < n && str[l] == str[r]; r++) {};
-    ret.push_back({str[l], r - l});
-    l = r;
-  }
-  return ret;
-}
+#pragma endregion
+
+
 
 int main(){
-  LL(N, M);
-  STR(S);
-  vector<pair<char, ll>> v = encode(S);
+  LL(N);
 
-  ll n1 = 0;
-  ll n2 = 0;
-  ll syatu = 0;
-  ll n1max = 0;
-  ll n2max = 0;
-  ll smax = 0;
-  fore(i, v){
-    char c = i.first;
-    ll cnt = i.second;
-    if(c != '0'){
-      if(c == '1'){
-        n1 += cnt;
-      }else{
-        n2 += cnt;
+  unordered_map<ll, ll> mp;
+  pq<ll> q;
+  q.push(N);
+  mp[N] = 1;
+
+  ll ans = 0;
+  while(len(q)){
+    ll v = q.top();
+    q.pop();
+
+    if(v == 1){
+      continue;
+    }
+    ans += v * mp[v];
+    if(v % 2 == 0){
+      rep(_, 2){
+        if(mp.contains(v / 2)){
+          mp[v / 2] += mp[v];
+        }else{
+          q.push(v / 2);
+          mp[v / 2] = mp[v];
+        }
       }
-      syatu += cnt;
     }else{
-      chmax(n1max, n1);
-      chmax(n2max, n2);
-      chmax(smax, syatu);
-      n1 = 0;
-      n2 = 0;
-      syatu = 0;
+      if(mp.contains(v / 2)){
+        mp[v / 2] += mp[v];
+      }else{
+        q.push(v / 2);
+        mp[v / 2] += mp[v];
+      }
+      if(mp.contains(v / 2 + 1)){
+        mp[v / 2 + 1] += mp[v];
+      }else{
+        q.push(v / 2 + 1);
+        mp[v / 2 + 1] += mp[v];
+      }
     }
   }
-  debug(n1max, n2max, smax);
+  print(ans);
+  debug(mp)
 }

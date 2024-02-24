@@ -1,6 +1,5 @@
 ・鉄則本やり込む！
 
-・DP
 
 ・木DP
 https://algo-logic.info/tree-dp/
@@ -13,5 +12,12 @@ https://blog.hamayanhamayan.com/entry/2016/11/14/223727
 ・むずい数学
 https://atcoder.jp/contests/abc254/tasks/abc254_d
 
+・二次元累積和（応用）
+https://atcoder.jp/contests/abc331/tasks/abc331_d
+
+・部分集合列挙 O(N^3)
+https://atcoder.jp/contests/abc332/tasks/abc332_e
+
 ACL 整備（最大流など）
 しゃくとり法のライブラリを整理
+
