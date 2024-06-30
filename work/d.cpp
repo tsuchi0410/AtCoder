@@ -26,16 +26,6 @@ template<class T, class U> auto min(const map<T, U>& mp){ return *(mp.begin()); 
 template<class T> auto max(const T& a){ return *max_element(all(a)); }
 template<class T> auto max(const set<T>& s){ return *(--s.end()); }
 template<class T, class U> auto max(const map<T, U>& mp){ return *(--mp.end()); }
-template<class T, class U>ll count(const T& a, const U& b){ return count(all(a), b); }
-template <typename T>
-long long index(const T& ctr, const T& subctr) {
-  auto itr = search(ctr.begin(), ctr.end(), subctr.begin(), subctr.end());
-  if(itr == ctr.end()){
-    return -1;
-  }else{
-    return distance(ctr.begin(), itr);
-  }
-}
 template<typename T>
 auto sum(vector<T>& v){
   return accumulate(v.begin(), v.end(), 0LL);
@@ -74,8 +64,6 @@ map<char, ll> counter(string &v){
   return mp;
 }
 #define unique(v) sort(all(v)), v.erase(unique(all(v)), v.end()), v.shrink_to_fit()
-template<class T> 
-auto reverse(T& x){ return reverse(x.begin(), x.end()); }
 template<typename T> void chmin(T& a, T b) { a = min(a, b); }
 template<typename T> void chmax(T& a, T b) { a = max(a, b); }
 template <typename T> ll bisect_left(vector<T> &X, ll v){ return lower_bound(X.begin(), X.end(), (ll)v) - X.begin(); }
@@ -410,9 +398,93 @@ lambda(G&&) -> lambda<std::decay_t<G>>;
 
 
 int main(){
-  LL(A, B, D);
-  rep(i, A, B + 1, D){
-    cout << i << " ";
+  LL(N, K);
+  STR(S);
+
+  unordered_map<ll, vector<string>> mp;
+  rep(i, K){
+    mp[i] = {};
   }
-  cout << endl;
+  mp[1].push_back("A");
+  mp[1].push_back("B");
+  rep(loop, 2, K + 1){
+    rep(bit, 1 << loop){
+      string s = "";
+      rep(i, loop){
+        if((bit >> i) & 1 == 1){
+          s += 'A';
+        }else{
+          s += 'B';
+        }
+      }
+      mp[loop].push_back(s);
+    }
+  }
+
+  debug(mp)
+
+  ll ans = 1;
+  rep(i, N){
+    if(S[i] == '?'){
+      ans *= 2;
+      ans %= MOD;
+    }
+  }
+
+  debug(ans)
+
+  rep(i, N){
+    if(i + K > N) continue;
+    // ? count
+    ll cnt = 0;
+    rep(j, K){
+      if(S[i + j] == '?'){
+        cnt++;
+      }
+    }
+    bool f = true;
+    // パターン
+    rep(j, len(mp[cnt])){
+      string s2 = "";
+      ll idx = 0;
+      rep(k, K){
+        if(S[i + k] == '?'){
+          s2 += mp[cnt][j][idx];
+          idx++;
+        }else{
+          s2 += S[i + k];
+        }
+      }
+      string s3 = s2;
+      reverse(s3.begin(), s3.end());
+      if(s2 == s3) f = false;
+    }
+  }
+
+  print(ans);
+
+  // rep(i, len(p)){
+  //   debug(S, p[i])
+  //   bool f2 = true;
+  //   rep(j, N - K){
+  //     bool f = true;
+  //     rep(k, K){
+  //       if(S[j + k] == '?') continue;
+  //       if(S[j + k] == p[i][k]) continue;
+  //       f = false;
+  //     }
+  //     if(f){ // kaibun
+  //       f2 = false;
+  //       break;
+  //     }
+  //   }
+  //   if(f2){
+  //     ans++;
+  //     debug(p[i])
+  //   }
+  // }
+
+
+
+
 }

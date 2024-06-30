@@ -1,3 +1,5 @@
+#pragma region
+
 #include <bits/stdc++.h>
 using namespace std;
 
@@ -39,7 +41,7 @@ auto sum(vector<T>& v){
   return accumulate(v.begin(), v.end(), 0LL);
 }
 template <typename T>
-vector<T> cum(vector<T> &v){
+vector<T> cumsum(vector<T> &v){
   vector<T> s = {0};
   for(ll i = 0; i < (ll)v.size(); i++) s.push_back(s[i] + v[i]);
   return s;
@@ -403,38 +405,32 @@ lambda(G&&) -> lambda<std::decay_t<G>>;
 #  define debug(...) ;
 #endif
 
+#pragma endregion
 
+string al = "abcdefghijklmnopqrstuvwxyz";
+string al2 = "abcdefghijklmnopqrstuvwxyz";
 
 int main(){
-  LL(N, K);
-  VEC(ll, P, N);
-  set<ll> s;
-  unordered_map<ll, vector<ll>> mp;
-  vector<ll> idx(N + 1);
-  vector<ll> ans(N + 1);
-  rep(i, N){
-    ll x = *(s.lower_bound(P[i]));
-    if(x == 0 or x == P[i]){
-      mp[P[i]].push_back(P[i]);
-      idx[P[i]] = P[i];
-      if(len(mp[P[i]]) == K){
-        fore(v, mp[P[i]]){
-          ans[v] = i + 1;
-          s.erase(v);
-        }
-      }
-    }else{
-      idx[P[i]] = idx[x];
-      mp[idx[P[i]]].push_back(P[i]);
-      if(len(mp[idx[P[i]]]) == K){
-        fore(v, mp[idx[P[i]]]){
-          ans[v] = i + 1;
-          s.erase(v);
-        }
+  LL(N);
+  STR(S);
+
+  LL(Q);
+  rep(_, Q){
+    CHAR(c, d);
+    rep(i, 26){
+      if(al2[i] == c){
+        al2[i] = d;
       }
     }
   }
-  debug(s)
-  debug(mp)
-  debug(ans)
+
+  rep(i, len(S)){
+    rep(j, 26){
+      if(S[i] == al[j]){
+        cout << al2[j];
+      }
+    }
+  }
+  print();
+
 }

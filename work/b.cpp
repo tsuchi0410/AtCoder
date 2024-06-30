@@ -26,16 +26,6 @@ template<class T, class U> auto min(const map<T, U>& mp){ return *(mp.begin()); 
 template<class T> auto max(const T& a){ return *max_element(all(a)); }
 template<class T> auto max(const set<T>& s){ return *(--s.end()); }
 template<class T, class U> auto max(const map<T, U>& mp){ return *(--mp.end()); }
-template<class T, class U>ll count(const T& a, const U& b){ return count(all(a), b); }
-template <typename T>
-long long index(const T& ctr, const T& subctr) {
-  auto itr = search(ctr.begin(), ctr.end(), subctr.begin(), subctr.end());
-  if(itr == ctr.end()){
-    return -1;
-  }else{
-    return distance(ctr.begin(), itr);
-  }
-}
 template<typename T>
 auto sum(vector<T>& v){
   return accumulate(v.begin(), v.end(), 0LL);
@@ -411,39 +401,11 @@ lambda(G&&) -> lambda<std::decay_t<G>>;
 
 int main(){
   LL(N);
-  vector<vector<vector<ll>>> G(N);
-  rep(i, N - 1){
-    LL(A, B, X);
-    X--;
-    G[i].push_back({i + 1, A});
-    G[i].push_back({X, B});
+  VEC(ll, A, 2 * N);
+
+  ll ans = 0;
+  rep(i, 2 * N - 2){
+    if(A[i] == A[i + 2]) ans++;
   }
-
-  vector<ll> dist(N, INF);
-  dist[0] = 0;
-  vector<bool> seen(N, false);
-
-  // {cost, v}
-  pqg<vector<ll>> q;
-  q.push({0, 0});
-
-  while(len(q)) {
-    ll cost_v = q.top()[0];
-    ll v = q.top()[1];
-    q.pop();
-
-    if(seen[v]) continue;
-
-    seen[v] = true;
-    fore(i, G[v]){
-      ll nv = i[0];
-      ll cost_nv = i[1];
-      if(dist[nv] > cost_v + cost_nv){
-        dist[nv] = cost_v + cost_nv;
-        q.push({dist[nv], nv});
-      }
-    }
-  }
-
-  print(dist[N - 1]);
+  print(ans);
 }

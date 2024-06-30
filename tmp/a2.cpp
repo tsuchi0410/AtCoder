@@ -26,16 +26,6 @@ template<class T, class U> auto min(const map<T, U>& mp){ return *(mp.begin()); 
 template<class T> auto max(const T& a){ return *max_element(all(a)); }
 template<class T> auto max(const set<T>& s){ return *(--s.end()); }
 template<class T, class U> auto max(const map<T, U>& mp){ return *(--mp.end()); }
-template<class T, class U>ll count(const T& a, const U& b){ return count(all(a), b); }
-template <typename T>
-long long index(const T& ctr, const T& subctr) {
-  auto itr = search(ctr.begin(), ctr.end(), subctr.begin(), subctr.end());
-  if(itr == ctr.end()){
-    return -1;
-  }else{
-    return distance(ctr.begin(), itr);
-  }
-}
 template<typename T>
 auto sum(vector<T>& v){
   return accumulate(v.begin(), v.end(), 0LL);
@@ -410,16 +400,5 @@ lambda(G&&) -> lambda<std::decay_t<G>>;
 
 
 int main(){
-  LL(Q);
-  vector<ll> A;
-  rep(_, Q){
-    LL(t);
-    if(t == 1){
-      LL(x);
-      A.push_back(x);
-    }else{
-      LL(t);
-      print(A[len(A) - t]);
-    }
-  }
+  
 }

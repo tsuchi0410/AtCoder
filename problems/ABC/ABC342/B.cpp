@@ -411,45 +411,22 @@ lambda(G&&) -> lambda<std::decay_t<G>>;
 
 int main(){
   LL(N);
+  VEC(ll, P, N);
 
-  unordered_map<ll, ll> mp;
-  pq<ll> q;
-  q.push(N);
-  mp[N] = 1;
+  vector<ll> v(N + 1);
+  rep(i, N){
+    v[P[i]] = i;
+  }
 
-  ll ans = 0;
-  while(len(q)){
-    ll v = q.top();
-    q.pop();
+  debug(v)
 
-    if(v == 1){
-      continue;
-    }
-    ans += v * mp[v];
-    if(v % 2 == 0){
-      rep(_, 2){
-        if(mp.contains(v / 2)){
-          mp[v / 2] += mp[v];
-        }else{
-          q.push(v / 2);
-          mp[v / 2] = mp[v];
-        }
-      }
+  LL(Q);
+  rep(_, Q){
+    LL(A, B);
+    if(v[A] < v[B]){
+      print(A);
     }else{
-      if(mp.contains(v / 2)){
-        mp[v / 2] += mp[v];
-      }else{
-        q.push(v / 2);
-        mp[v / 2] += mp[v];
-      }
-      if(mp.contains(v / 2 + 1)){
-        mp[v / 2 + 1] += mp[v];
-      }else{
-        q.push(v / 2 + 1);
-        mp[v / 2 + 1] += mp[v];
-      }
+      print(B);
     }
   }
-  print(ans);
-  debug(mp)
 }
