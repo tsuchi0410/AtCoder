@@ -64,6 +64,8 @@ map<char, ll> counter(string &v){
   return mp;
 }
 #define unique(v) sort(all(v)), v.erase(unique(all(v)), v.end()), v.shrink_to_fit()
+template<class T> 
+auto reverse(T& x){ return reverse(x.begin(), x.end()); }
 template<typename T> void chmin(T& a, T b) { a = min(a, b); }
 template<typename T> void chmax(T& a, T b) { a = max(a, b); }
 template <typename T> ll bisect_left(vector<T> &X, ll v){ return lower_bound(X.begin(), X.end(), (ll)v) - X.begin(); }
@@ -398,93 +400,55 @@ lambda(G&&) -> lambda<std::decay_t<G>>;
 
 
 int main(){
-  LL(N, K);
+  LL(N);
   STR(S);
+  STR(T);
+  unordered_map<string, ll> mp;
 
-  unordered_map<ll, vector<string>> mp;
-  rep(i, K){
-    mp[i] = {};
-  }
-  mp[1].push_back("A");
-  mp[1].push_back("B");
-  rep(loop, 2, K + 1){
-    rep(bit, 1 << loop){
-      string s = "";
-      rep(i, loop){
-        if((bit >> i) & 1 == 1){
-          s += 'A';
-        }else{
-          s += 'B';
+  string Sxx = S + "xx";
+  queue<string> q;
+  q.push(S + "xx");
+  mp[S] = 0;
+
+  while(len(q)){
+    string v = q.front();
+    q.pop();
+
+    // 次見る場所を追加
+    vector<string> nxt_str;
+    rep(i, N + 1){
+      if(v[i] != 'x' and v[i + 1] != 'x'){
+        string kouho = v;
+        rep(j, N + 1){
+          if(kouho[j] == 'x' and kouho[j + 1] == 'x'){
+            kouho[j] = v[i];
+            kouho[j + 1] = v[i + 1];
+            kouho[i] = 'x';
+            kouho[i + 1] = 'x';
+            break;
+          }
         }
-      }
-      mp[loop].push_back(s);
-    }
-  }
-
-  debug(mp)
-
-  ll ans = 1;
-  rep(i, N){
-    if(S[i] == '?'){
-      ans *= 2;
-      ans %= MOD;
-    }
-  }
-
-  debug(ans)
-
-  rep(i, N){
-    if(i + K > N) continue;
-    // ? count
-    ll cnt = 0;
-    rep(j, K){
-      if(S[i + j] == '?'){
-        cnt++;
+        nxt_str.push_back(kouho);
       }
     }
-    bool f = true;
-    // パターン
-    rep(j, len(mp[cnt])){
-      string s2 = "";
-      ll idx = 0;
-      rep(k, K){
-        if(S[i + k] == '?'){
-          s2 += mp[cnt][j][idx];
-          idx++;
-        }else{
-          s2 += S[i + k];
-        }
+    // 有向辺を繋げながらBFS
+    fore(nv, nxt_str){
+      if(!mp.contains(nv)){
+        mp[nv] = mp[v] + 1; // チェック
+        q.push(nv);
       }
-      string s3 = s2;
-      reverse(s3.begin(), s3.end());
-      if(s2 == s3) f = false;
     }
   }
-
-  print(ans);
-
-  // rep(i, len(p)){
-  //   debug(S, p[i])
-  //   bool f2 = true;
-  //   rep(j, N - K){
-  //     bool f = true;
-  //     rep(k, K){
-  //       if(S[j + k] == '?') continue;
-  //       if(S[j + k] == p[i][k]) continue;
-  //       f = false;
-  //     }
-  //     if(f){ // kaibun
-  //       f2 = false;
-  //       break;
-  //     }
-  //   }
-  //   if(f2){
-  //     ans++;
-  //     debug(p[i])
-  //   }
-  // }
-
-
-
-
+  
+  fore(k, v, mp){
+    string kouho = "";
+    rep(j, N + 1){
+      if(k[j] != 'x') kouho += k[j];
+    }
+    if(T == kouho){
+      print(v);
+      return 0;
+    }
+  }
+  print(-1);
 }

@@ -1,8 +1,8 @@
 /*
 計算量 : (NlogN)
 
-vl v = {1, 3, 10, 6, 5, 5};
-vl res = compress(v);
+vector<ll> v = {1, 3, 10, 6, 5, 5};
+vector<ll> res = compress(v);
 
 # res: [ 0 1 4 3 2 2 ]
 
@@ -11,11 +11,11 @@ vl res = compress(v);
 
 /* 1 次元 vector */
 // 関数
-vector<ll> compress(vl &v){
-    vl vals = v;
+vector<ll> compress(vector<ll> &v){
+    vector<ll> vals = v;
     sort(vals.begin(), vals.end());
     vals.erase(unique(vals.begin(), vals.end()), vals.end()); // 隣り合う重複削除
-    vl res(len(v));
+    vector<ll> res(v.size());
     for (int i = 0; i < (int)v.size(); i++) {
         res[i] = lower_bound(vals.begin(), vals.end(), v[i]) - vals.begin();
     }
@@ -23,11 +23,11 @@ vector<ll> compress(vl &v){
 };
 
 // lambda
-lambda compress = [&](auto&& compress, vl &v) -> vl {
-    vl vals = v;
+lambda compress = [&](auto&& compress, vector<ll> &v) -> vector<ll> {
+    vector<ll> vals = v;
     sort(vals.begin(), vals.end());
     vals.erase(unique(vals.begin(), vals.end()), vals.end()); // 隣り合う重複削除
-    vl res(len(v));
+    vector<ll> res(v.size());
     for (int i = 0; i < (int)v.size(); i++) {
         res[i] = lower_bound(vals.begin(), vals.end(), v[i]) - vals.begin();
     }
@@ -37,7 +37,7 @@ lambda compress = [&](auto&& compress, vl &v) -> vl {
 
 // umap で管理したいときは以下を使う
 umap<ll, ll> mp;
-rep(i, len(v)){
+rep(i, v.size()){
     mp[v[i]] = res[i];
 }
 

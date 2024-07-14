@@ -400,5 +400,5 @@ lambda(G&&) -> lambda<std::decay_t<G>>;
 
 
 int main(){
-  
+
 }

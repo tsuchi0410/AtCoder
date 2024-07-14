@@ -50,3 +50,13 @@ char c = 97; // a
 char c = 65; // A
 
 
+// char 型数値 -> ll 型数値
+#define ctoll(x) static_cast<long long>(x - '0')
+// ll型数値 -> char 型数値
+#define lltoc(x) static_cast<char>(x + '0')
+
+// ll 型数値 -> string 型数値
+#define lltos(x) to_string(x)
+// string 型数値 -> ll 型数
+stoll(x)
+

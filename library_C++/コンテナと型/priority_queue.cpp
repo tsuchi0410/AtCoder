@@ -1,6 +1,6 @@
 // 宣言
-priority_queue<int> pq; // 最も大きいものを取り出す
-priority_queue<int, vector<int>, greater<int>> pq; // 小さい順に取り出す
+priority_queue<ll> pq; // 最も大きいものを取り出す
+priority_queue<ll, vector<ll>, greater<ll>> pq; // 小さい順に取り出す
 
 // 追加
 pq.push(10);

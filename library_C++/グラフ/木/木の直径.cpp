@@ -57,6 +57,5 @@ int main(){
       q2.push(nv);
     }
   }
-
-  print(*max_element(all(dist2)));
+  ll diameter = *max_element(all(dist2));
 }

@@ -400,11 +400,13 @@ lambda(G&&) -> lambda<std::decay_t<G>>;
 
 
 int main(){
-  LL(N);
-  ll ans = 0;
+  LL(N, K, X);
+  VEC(ll, A, N);
   rep(i, N){
-    STR(S);
-    if(S == "Takahashi") ans++;
+    cout << A[i] << " ";
+    if(i == K - 1){
+      cout << X << " ";
+    }
   }
-  print(ans);
+  cout << endl;
 }

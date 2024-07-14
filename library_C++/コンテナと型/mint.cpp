@@ -1,16 +1,3 @@
-#include <bits/stdc++.h>
-using namespace std;
-
-using ll = long long;
-#define rep(i, n) for (ll i = 0; i < n; i++)
-
-#ifdef LOCAL
-#  include <debug_print.hpp>
-#  define debug(...) cerr << "\033[33m"; debug_print::multi_print(#__VA_ARGS__, __VA_ARGS__); cerr << "\033[m";
-#else
-#  define debug(...) ;
-#endif
-
 const int MOD = 998244353;
 // modint
 // https://github.com/drken1215/algorithm/blob/master/MathNumberTheory/modint.cpp
@@ -161,23 +148,3 @@ template<class mint> struct BiCoef {
 };
 
 using mint = Fp<MOD>;
-
-int main(){
-  ll N;
-  cin >> N;
-  vector<ll> A(N);
-  rep(i, N) cin >> A[i];
-  // 第一項 i, 第二項 j, 長さ k
-  vector dp(N + 1, vector(N + 1, vector<mint>(N + 1)));
-  dp[0][0][0] = 1;
-  for(int i = 0; i < N; i++){
-    for(int j = i + 1; j < N; j++){
-      for(int k = 2; k < N; k++){
-        if(A[k] - A[j] == A[j] - A[i]){
-          dp[i][j][k] += dp[i][j][k - 1];
-        }
-      }
-    }
-  }
-  debug(dp)
-}

@@ -14,10 +14,12 @@ https://algo-method.com/tasks/1008
 */ 
 
 int main(){
-  LL(N, M);
+  ll N, M;
+  cin >> N >> M;
   vector<vector<vector<ll>>> G(N);
-  rep(_, M){
-    LL(u, v, w);
+  for(int i = 0; i < M; i++){
+    ll u, v, w;
+    cin >> u >> v >> w;
     u--;
     v--;
     G[u].push_back({v, w});
@@ -32,7 +34,7 @@ int main(){
   pqg<vector<ll>> q;
   q.push({0, 0});
 
-  while(len(q)) {
+  while(q.size()) {
     ll cost_v = q.top()[0];
     ll v = q.top()[1];
     q.pop();
@@ -40,7 +42,7 @@ int main(){
     if(seen[v]) continue;
 
     seen[v] = true;
-    fore(i, G[v]){
+    for(auto &i : G[v]){
       ll nv = i[0];
       ll cost_nv = i[1];
       if(dist[nv] > cost_v + cost_nv){

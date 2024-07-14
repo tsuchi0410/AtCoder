@@ -400,16 +400,15 @@ lambda(G&&) -> lambda<std::decay_t<G>>;
 
 
 int main(){
-  LL(Sx, Sy);
-  LL(Tx, Ty);
-  if(Sy % 2 != Sx % 2) Sx--;
-  if(Ty % 2 != Tx % 2) Tx--;
-  Ty -= Sy;
-  Tx -= Sx;
-  Sy = 0;
-  Sx = 0;
-  Tx = abs(Tx);
-  Ty = abs(Ty);
-  ll ans = Ty + (max((ll)0, Tx - Ty)) / 2;
+  LL(N, K);
+  VEC(ll, A, N);
+  sort(A);
+  debug(A)
+  ll ans = INF;
+  rep(i, N){
+    if(N - K - 1 + i >= N) break;
+    ll cnt = A[N - K - 1 + i] - A[i];
+    chmin(ans, cnt);
+  }
   print(ans);
 }

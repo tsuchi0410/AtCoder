@@ -400,12 +400,20 @@ lambda(G&&) -> lambda<std::decay_t<G>>;
 
 
 int main(){
-  LL(N);
-  VEC(ll, A, 2 * N);
+  LL(a, b, c, d, e, f);
+  LL(h, i, j, k, l, m);
 
-  ll ans = 0;
-  rep(i, 2 * N - 2){
-    if(A[i] == A[i + 2]) ans++;
+  // [a, d], [h, k]
+  // [b, e], [i, l]
+  // [c, f], [j, m]
+  if(max(a, h) < min(d, k)){
+    if(max(b, i) < min(e, l)){
+      if(max(c, j) < min(f, m)){
+        print("Yes");
+        return 0;
+      }
+    }
   }
-  print(ans);
+
+  print("No");
 }

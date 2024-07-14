@@ -17,7 +17,7 @@ while(len(q)){
   // 有向辺を繋げながらBFS
   fore(nv, next){
     if(条件 and d[nv] == -1){
-      d[nv] = d[v] + 1; // チェック
+      d[nv] = d[v] + 1;
       q.push(nv);
     }
   }
